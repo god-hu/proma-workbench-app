@@ -96,7 +96,29 @@ a:hover{text-decoration:underline;color:var(--accent-ink)}
 .chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .sec-title{font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin:22px 0 11px;display:flex;align-items:center;gap:7px}
 
-/* ===== 卡片 ===== */
+/* ===== 卡片网格（卡片墙） ===== */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.gcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:9px;transition:transform .14s,box-shadow .14s,border-color .14s;position:relative;overflow:hidden}
+.gcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:#c9d6f7}
+.gcard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:.0;transition:opacity .14s}
+.gcard:hover::before{opacity:.9}
+.gcard .ghead{display:flex;align-items:center;gap:7px}
+.gcard .gdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.gcard .gtrack{font-size:11px;color:var(--sub);font-weight:600}
+.gcard .gtitle{font-size:14.5px;font-weight:700;line-height:1.5;color:var(--ink);word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gcard .gtitle a{color:var(--ink)}
+.gcard .gtitle a:hover{color:var(--accent)}
+.gcard .gtitle a:after{content:' ↗';font-size:10px;color:var(--muted)}
+.gcard .gdesc{font-size:12.5px;color:var(--sub);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gcard .gfoot{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:auto;padding-top:3px}
+.gtag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:7px;font-size:10.5px;font-weight:600;background:#f1f3f5;color:var(--sub)}
+.gtag.blue{background:var(--accent-soft);color:var(--accent-ink)}
+.gtag.amber{background:#fff4e5;color:#b8843c}
+.gtag.red{background:#fdecec;color:#c0392b}
+.gtag.green{background:#e9f8ef;color:#1a9e54}
+.gread{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
+
+/* 旧单列卡片（保留给概览内联用，但列表视图改用 gcard） */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px 16px;margin-bottom:9px;display:flex;align-items:flex-start;gap:13px;box-shadow:var(--shadow);transition:transform .13s,box-shadow .13s,border-color .13s}
 .card:hover{transform:translateY(-1px);box-shadow:var(--shadow-hover);border-color:#d6def5}
 .card .cl{width:3px;min-height:42px;border-radius:2px;flex-shrink:0;align-self:stretch}
@@ -114,7 +136,7 @@ a:hover{text-decoration:underline;color:var(--accent-ink)}
 .more-btn:hover{background:var(--accent-soft);border-color:var(--accent)}
 
 /* 录入 */
-.entry{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.entry{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;margin-bottom:16px;box-shadow:var(--shadow)}
 .entry textarea{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:9px;font-size:13.5px;font-family:inherit;outline:none;background:var(--bg);resize:none;transition:border .2s}
 .entry textarea:focus{border-color:var(--accent);background:#fff}
 .btn{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:var(--accent);color:#fff;transition:opacity .12s}
@@ -127,9 +149,9 @@ a:hover{text-decoration:underline;color:var(--accent-ink)}
 .skill-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
 .skill-card h4{font-size:14px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:6px}
 .skill-card p{font-size:12px;color:var(--sub);line-height:1.65}
-.skill-card .note{background:var(--accent-soft);border-radius:8px;padding:7px 10px;margin-bottom:7px;font-size:11.5px;color:var(--accent-ink)}
+.skill-card .note{background:var(--accent-soft);border-radius:8px;padding:7px 10px;margin-bottom:7px;font-size:11.5px;color:var(--accent-ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.skill-card .sdesc{font-size:12px;color:var(--sub);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
-/* 图片网格 */
 .img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
 .img-card .thumb{height:120px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -282,34 +304,42 @@ function rv(){
   const kpiHTML=`<div class="kpis">${kpis.map((k,i)=>`<div class="kpi" onclick="showView('${['topics','materials','inspirations','articles','hotspots','skills'][i]}')"><span class="ki">${k[0]}</span><div class="kn">${k[2]}</div><div class="kl">${k[1]}</div></div>`).join("")}</div>`;
   const fsteps=[["💡","灵感",s.inspirations||0,"#9b7bc4"],["🎯","选题",s.topics||0,"#2962ff"],["📝","成品",s.articles||0,"#0ea5e9"],["🚀","发布",s.publish||0,"#22c55e"]];
   const funnel=`<div class="panel"><h3>📈 内容漏斗</h3><div class="funnel">${fsteps.map(f=>`<div class="fstep"><div class="fdot" style="background:${f[3]}">${f[0]}</div><div class="fnum">${f[2]}</div><div class="flbl">${f[1]}</div></div>`).join("")}</div></div>`;
-  const inspHTML=`<div class="panel"><h3>💡 最近灵感</h3>${(D.inspirations||[]).slice(-4).reverse().map(i=>`<div class="card"><div class="cl" style="background:#c4a07b"></div><div class="cr"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?`<span>${esc(i.source)}</span>`:""}</div></div></div>`).join("")||'<div class="empty">暂无灵感</div>'}</div>`;
-  const hotHTML=`<div class="panel"><h3>🔥 最新热点</h3>${(D.hotspots||[]).slice(0,4).map(h=>`<div class="card"><div class="cl" style="background:#c45b5b"></div><div class="cr"><div class="t">${link(h.title,h.url)}</div><div class="meta">${h.platform?`<span>📡 ${esc(h.platform)}</span>`:""}<span>${esc(h.track||"")}</span></div></div></div>`).join("")||'<div class="empty">暂无热点</div>'}</div>`;
+  const inspHTML=`<div class="panel"><h3>💡 最近灵感</h3><div class="card-grid">${(D.inspirations||[]).slice(-4).reverse().map(i=>gInsp(i)).join("")||'<div class="empty">暂无灵感</div>'}</div></div>`;
+  const hotHTML=`<div class="panel"><h3>🔥 最新热点</h3><div class="card-grid">${(D.hotspots||[]).slice(0,4).map(h=>gHot(h)).join("")||'<div class="empty">暂无热点</div>'}</div></div>`;
   return kpiHTML+funnel+`<div class="fcols">${inspHTML}${hotHTML}</div>`;
 }
 
 /* ===== 选题 ===== */
 let tk="全部",tl=40;
-function rt(){let l=(D.topics||[]).filter(t=>tk==="全部"||t.track===tk);const ts=["全部",...new Set((D.topics||[]).map(t=>t.track))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===tk?"active":""}" onclick="tk='${t}';tl=40;render()">${t}</span>`).join("")}</div>${l.slice(0,tl).map(t=>`<div class="card"><div class="cl" style="background:${clr(t.track)}"></div><div class="cr"><div class="t">${link(t.title,t.url)}${t.manual?' <span class="badge">手工</span>':""}</div><div class="meta"><span>${esc(t.track)}</span>${t.tonality?`<span class="tag-amber">调性${t.tonality}</span>`:""}${t.author?`<span>${esc(t.author)}</span>`:""}${t.read?`<span>👁 ${esc(t.read)}</span>`:""}</div></div></div>`).join("")}${l.length>tl?`<button class="more-btn" onclick="tl+=40;render()">加载更多 (${l.length-tl})</button>`:""}`}
+function rt(){let l=(D.topics||[]).filter(t=>tk==="全部"||t.track===tk);const ts=["全部",...new Set((D.topics||[]).map(t=>t.track))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===tk?"active":""}" onclick="tk='${t}';tl=40;render()">${t}</span>`).join("")}</div><div class="card-grid">${l.slice(0,tl).map(t=>gTopic(t)).join("")}</div>${l.length>tl?`<button class="more-btn" onclick="tl+=40;render()">加载更多 (${l.length-tl})</button>`:""}`}
 
 /* ===== 素材 ===== */
 let mk="全部",ml=40;
-function rm(){let l=(D.materials||[]).filter(m=>mk==="全部"||(m.source||m.category||"")===mk);const ts=["全部",...new Set((D.materials||[]).map(m=>m.source||m.category||"未分类"))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===mk?"active":""}" onclick="mk='${t}';ml=40;render()">${t}</span>`).join("")}</div>${l.slice(0,ml).map(m=>`<div class="card"><div class="cl" style="background:#7b93c4"></div><div class="cr"><div class="t">${link(m.title,m.url)}</div><div class="meta"><span class="badge">${esc(m.source||m.category||"")}</span>${m.author?`<span>${esc(m.author)}</span>`:""}${m.read?`<span>👁 ${esc(m.read)}</span>`:""}</div></div></div>`).join("")}${l.length>ml?`<button class="more-btn" onclick="ml+=40;render()">加载更多 (${l.length-ml})</button>`:""}`}
+function rm(){let l=(D.materials||[]).filter(m=>mk==="全部"||(m.source||m.category||"")===mk);const ts=["全部",...new Set((D.materials||[]).map(m=>m.source||m.category||"未分类"))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===mk?"active":""}" onclick="mk='${t}';ml=40;render()">${t}</span>`).join("")}</div><div class="card-grid">${l.slice(0,ml).map(m=>gMat(m)).join("")}</div>${l.length>ml?`<button class="more-btn" onclick="ml+=40;render()">加载更多 (${l.length-ml})</button>`:""}`}
 
 /* ===== 灵感 ===== */
-function ri(){const list=(D.inspirations||[]).slice().reverse();return`<div class="entry"><textarea id="insp-text" rows="2" placeholder="记一条灵感：今天看到…"></textarea><div style="margin-top:10px"><button class="btn" onclick="addInsp()">保存灵感</button></div></div>${list.map(i=>`<div class="card"><div class="cl" style="background:#c4a07b"></div><div class="cr"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?`<span>${esc(i.source)}</span>`:""}</div></div></div>`).join("")||'<div class="empty">暂无灵感</div>'}`}
+function ri(){const list=(D.inspirations||[]).slice().reverse();return`<div class="entry"><textarea id="insp-text" rows="2" placeholder="记一条灵感：今天看到…"></textarea><div style="margin-top:10px"><button class="btn" onclick="addInsp()">保存灵感</button></div></div><div class="card-grid">${list.map(i=>gInsp(i)).join("")||'<div class="empty">暂无灵感</div>'}</div>`}
 async function addInsp(){const txt=Q("insp-text").value.trim();if(!txt)return;if(!D.inspirations)D.inspirations=[];D.inspirations.push({text:txt,source:"网页",created:new Date().toISOString().slice(0,10)});D.stats=D.stats||{};D.stats.inspirations=D.inspirations.length;Q("insp-text").value="";render();try{await saveData()}catch(e){}}
 
 /* ===== 热点 ===== */
-function rh(){return`<div class="kpis" style="grid-template-columns:repeat(3,1fr)"><div class="kpi"><div class="kn">${(D.hotspots||[]).length}</div><div class="kl">当前热点数</div></div></div>${(D.hotspots||[]).map(h=>`<div class="card"><div class="cl" style="background:#c45b5b"></div><div class="cr"><div class="t">${link(h.title,h.url)}</div><div class="meta"><span>${esc(h.track)}</span><span>📡 ${esc(h.platform||"")}</span>${h.tonality?`<span class="tag-amber">调性${h.tonality}</span>`:""}</div></div></div>`).join("")||'<div class="empty">暂无热点</div>'}`}
+function rh(){return`<div class="kpis" style="grid-template-columns:repeat(3,1fr)"><div class="kpi"><div class="kn">${(D.hotspots||[]).length}</div><div class="kl">当前热点数</div></div></div><div class="card-grid">${(D.hotspots||[]).map(h=>gHot(h)).join("")||'<div class="empty">暂无热点</div>'}</div>`}
 
 /* ===== Skill ===== */
-function rs(){const q=(document.getElementById("search")?.value||"").trim().toLowerCase();const list=(D.skills||[]).filter(s=>!q||(s.name+(s.note||"")+(s.desc||"")).toLowerCase().includes(q));return`<div class="skill-grid">${list.map(s=>`<div class="skill-card"><h4>${esc(s.name)}</h4>${s.note?`<div class="note">🎯 ${esc(s.note)}</div>`:""}<p>${esc(s.desc||"")}</p></div>`).join("")||'<div class="empty">无匹配 Skill</div>'}</div>`}
+function rs(){const q=(document.getElementById("search")?.value||"").trim().toLowerCase();const list=(D.skills||[]).filter(s=>!q||(s.name+(s.note||"")+(s.desc||"")).toLowerCase().includes(q));return`<div class="skill-grid">${list.map(s=>`<div class="skill-card"><h4>${esc(s.name)}</h4>${s.note?`<div class="note">🎯 ${esc(s.note)}</div>`:""}${s.desc?`<div class="sdesc">${esc(s.desc)}</div>`:""}</div>`).join("")||'<div class="empty">无匹配 Skill</div>'}</div>`}
 
 /* ===== 成品 ===== */
-function ra(){return(D.articles||[]).map(a=>`<div class="card"><div class="cl" style="background:#0ea5e9"></div><div class="cr"><div class="t">${esc(a.name)}</div><div class="meta"><span>${esc(a.cat||"")}</span><span>${esc(a.date||"")}</span></div></div></div>`).join("")||'<div class="empty">暂无成品</div>'}
+function ra(){return`<div class="card-grid">${(D.articles||[]).map(a=>gArt(a)).join("")||'<div class="empty">暂无成品</div>'}</div>`}
 
 /* ===== 发布 ===== */
-function rp(){return(D.publish||[]).map(p=>`<div class="card"><div class="cl" style="background:#22c55e"></div><div class="cr"><div class="t">${esc(p.title)}</div><div class="meta"><span>${esc(p.platform||"")}</span><span>${esc(p.date||"")}</span>${p.data?`<span>${esc(p.data)}</span>`:""}</div></div></div>`).join("")||'<div class="empty">暂无发布记录</div>'}
+function rp(){return`<div class="card-grid">${(D.publish||[]).map(p=>gPub(p)).join("")||'<div class="empty">暂无发布记录</div>'}</div>`}
+
+/* ===== 卡片工厂：网格卡片 + 简介 ===== */
+function gTopic(t){return `<div class="gcard"><div class="ghead"><span class="gdot" style="background:${clr(t.track)}"></span><span class="gtrack">${esc(t.track)}</span>${t.manual?'<span class="gtag blue">手工</span>':''}</div><div class="gtitle">${link(t.title,t.url)}</div><div class="gdesc">${esc(t.author||'未知作者')} · 调性 ${t.tonality||'?'} · 阅读 ${esc(t.read||'—')}</div><div class="gfoot">${t.tonality?`<span class="gtag amber">调性${t.tonality}</span>`:''}${t.author?`<span class="gtag">${esc(t.author)}</span>`:''}${t.read?`<span class="gread">👁 ${esc(t.read)}</span>`:''}</div></div>`}
+function gMat(m){return `<div class="gcard"><div class="ghead"><span class="gdot" style="background:#7b93c4"></span><span class="gtrack">${esc(m.category||m.source||'素材')}</span></div><div class="gtitle">${link(m.title,m.url)}</div><div class="gdesc">${esc(m.author||'未知作者')} · ${esc(m.source||'')} · 阅读 ${esc(m.read||'—')}</div><div class="gfoot"><span class="gtag blue">${esc(m.source||'素材')}</span>${m.read?`<span class="gread">👁 ${esc(m.read)}</span>`:''}</div></div>`}
+function gInsp(i){return `<div class="gcard"><div class="ghead"><span class="gdot" style="background:#c4a07b"></span><span class="gtrack">灵感</span></div><div class="gtitle" style="-webkit-line-clamp:4;font-weight:600">${esc(i.text)}</div><div class="gdesc">${esc(i.source||'随记')} · ${esc(i.created||'')}</div><div class="gfoot">${i.created?`<span class="gtag">${esc(i.created)}</span>`:''}</div></div>`}
+function gHot(h){return `<div class="gcard"><div class="ghead"><span class="gdot" style="background:#c45b5b"></span><span class="gtrack">${esc(h.track)}</span></div><div class="gtitle">${link(h.title,h.url)}</div><div class="gdesc">来源 ${esc(h.platform||'未知')} · 调性 ${h.tonality||'?'}</div><div class="gfoot">${h.platform?`<span class="gtag red">${esc(h.platform)}</span>`:''}${h.tonality?`<span class="gtag amber">调性${h.tonality}</span>`:''}</div></div>`}
+function gArt(a){return `<div class="gcard"><div class="ghead"><span class="gdot" style="background:#0ea5e9"></span><span class="gtrack">${esc(a.cat||'文章')}</span></div><div class="gtitle">${esc(a.name)}</div><div class="gdesc">完成于 ${esc(a.date||'')}</div><div class="gfoot">${a.cat?`<span class="gtag blue">${esc(a.cat)}</span>`:''}${a.date?`<span class="gread">${esc(a.date)}</span>`:''}</div></div>`}
+function gPub(p){return `<div class="gcard"><div class="ghead"><span class="gdot" style="background:#22c55e"></span><span class="gtrack">${esc(p.platform||'发布')}</span></div><div class="gtitle">${esc(p.title)}</div><div class="gdesc">${esc(p.data||'暂无数据')} · ${esc(p.date||'')}</div><div class="gfoot">${p.platform?`<span class="gtag green">${esc(p.platform)}</span>`:''}${p.date?`<span class="gread">${esc(p.date)}</span>`:''}</div></div>`}
 </script>
 </body>
 </html>
