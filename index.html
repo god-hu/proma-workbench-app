@@ -6,29 +6,30 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="自媒体工作台">
-<meta name="theme-color" content="#faf8f5">
+<meta name="theme-color" content="#f2f7f4">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <title>自媒体工作台</title>
 <style>
 :root{
-  --bg:#faf8f5;--card:#fff;--border:#ede8e2;
-  --ink:#2c2826;--sub:#9e9892;--muted:#c4beb8;
-  --accent:#c4875d;--accent-soft:#f8f1ea;--accent-bg:linear-gradient(135deg,#c4875d,#b0704a);
-  --green:#7d9f7a;--green-bg:#eef3ed;
-  --amber:#d4a24e;--amber-bg:#faf4ea;
-  --red:#c46b6b;--red-bg:#f8eded;
-  --radius:16px;--shadow:0 1px 3px rgba(44,40,38,.04),0 4px 12px rgba(44,40,38,.04);
+  --bg:#f2f7f4;--card:#fff;--border:#e4ede8;
+  --ink:#1a1d1c;--sub:#7d8582;--muted:#b4bfba;
+  --accent:#4a9e7f;--accent-soft:#e8f5ee;--accent-bg:linear-gradient(135deg,#4a9e7f,#3d8a6b);
+  --amber:#c8944a;--amber-bg:#faf3e8;
+  --red:#c46969;--red-bg:#f8eded;
+  --radius:14px;--shadow:0 1px 2px rgba(26,29,28,.03),0 2px 8px rgba(26,29,28,.04);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
 
 /* ═══ 密码锁 ═══ */
 #lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:200}
 .lock-wrap{text-align:center;width:min(320px,86vw)}
-.lock-emoji{font-size:42px;margin-bottom:12px}
-.lock-title{font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
+.lock-icon{font-size:40px;margin-bottom:14px}
+.lock-title{font-size:20px;font-weight:700;letter-spacing:-.4px;margin-bottom:2px}
 .lock-sub{color:var(--sub);font-size:12px;margin-bottom:24px}
 #pwd{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:14px;font-size:15px;outline:none;background:var(--card);text-align:center;transition:border .2s}
 #pwd:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
@@ -36,51 +37,47 @@ body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"PingFang SC","Microso
 .lock-btn:active{opacity:.85}
 .lock-err{color:var(--red);font-size:12px;margin-top:8px;min-height:14px}
 
-/* ═══ 抽屉菜单 ═══ */
-.menu-btn{width:36px;height:36px;border:none;border-radius:10px;background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--ink);box-shadow:var(--shadow)}
-.menu-btn:active{background:var(--accent-soft)}
-.backdrop{position:fixed;inset:0;z-index:90;background:rgba(44,40,38,.3);opacity:0;pointer-events:none;transition:opacity .25s}
+/* ═══ 抽屉 ═══ */
+.header{display:flex;align-items:center;gap:12px;padding:12px 16px;position:sticky;top:0;z-index:40;background:linear-gradient(180deg,var(--bg) 80%,transparent)}
+.header h1{font-size:17px;font-weight:700;letter-spacing:-.3px;flex:1}
+.burger{width:36px;height:36px;border:none;border-radius:12px;background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--ink);box-shadow:var(--shadow);transition:background .15s}
+.burger:active{background:var(--accent-soft)}
+.backdrop{position:fixed;inset:0;z-index:90;background:rgba(26,29,28,.25);opacity:0;pointer-events:none;transition:opacity .25s}
 .backdrop.open{opacity:1;pointer-events:auto}
 .drawer{position:fixed;top:0;left:0;bottom:0;width:270px;z-index:95;background:var(--card);transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:24px 16px}
-.drawer.open{transform:translateX(0);box-shadow:8px 0 40px rgba(44,40,38,.1)}
+.drawer.open{transform:translateX(0);box-shadow:8px 0 40px rgba(26,29,28,.08)}
 .drawer h3{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;padding:6px 10px;margin:6px 0 4px}
 .drawer-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;cursor:pointer;font-size:14px;color:var(--ink);transition:background .15s;margin-bottom:1px}
 .drawer-item:hover,.drawer-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
-.drawer-item .di{font-size:18px;width:24px;text-align:center}
-.drawer-foot{font-size:11px;color:var(--muted);text-align:center;padding:16px 10px}
+.drawer-item .di{font-size:17px;width:22px;text-align:center}
 
-/* ═══ 顶部 ═══ */
-.header{display:flex;align-items:center;gap:12px;padding:12px 16px;position:sticky;top:0;z-index:40;background:var(--bg)}
-.header h1{font-size:17px;font-weight:700;letter-spacing:-.2px;flex:1}
-
-/* ═══ 主区域 ═══ */
+/* ═══ 主区 ═══ */
 .main{padding:0 16px 130px;max-width:900px;margin:0 auto}
 
-/* ═══ 统计卡 ═══ */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-.stat{background:var(--card);border-radius:var(--radius);padding:14px 12px;text-align:center;box-shadow:var(--shadow)}
+/* ═══ 统计 ═══ */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border-radius:var(--radius);padding:15px 12px;text-align:center;box-shadow:var(--shadow)}
 .stat .num{font-size:24px;font-weight:700;letter-spacing:-.5px}
 .stat .lbl{font-size:11px;color:var(--sub);margin-top:2px}
 
-/* ═══ 筛选 chips ═══ */
+/* ═══ chips ═══ */
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
 .chip{padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--sub);transition:all .15s}
-.chip:hover{color:var(--ink);border-color:var(--muted)}
+.chip:hover{color:var(--ink)}
 .chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* ═══ 卡片 ═══ */
-.card{background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);transition:box-shadow .15s}
-.card:active{box-shadow:0 2px 6px rgba(44,40,38,.06)}
+.card{background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow)}
 .card .t{font-size:14px;font-weight:600;line-height:1.5}
+.card .t a{color:var(--ink);text-decoration:none}
+.card .t a:hover{color:var(--accent)}
 .card .meta{color:var(--sub);font-size:12px;margin-top:6px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
-.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:8px;font-size:11px;font-weight:600}
-.badge-track{background:var(--accent-soft);color:var(--accent)}
-.pill-high{background:var(--red-bg);color:var(--red)}
-.pill-med{background:var(--amber-bg);color:var(--amber)}
-.pill-done{background:var(--green-bg);color:var(--green)}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:8px;font-size:11px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
+.badge-amber{background:var(--amber-bg);color:var(--amber)}
+.badge-red{background:var(--red-bg);color:var(--red)}
 .empty{color:var(--sub);padding:30px 20px;text-align:center;background:var(--card);border:1.5px dashed var(--border);border-radius:var(--radius)}
 
-/* ═══ 录入表单 ═══ */
+/* ═══ 录入 ═══ */
 .entry{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
 .entry textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-family:inherit;outline:none;background:var(--bg);resize:none;transition:border .2s}
 .entry textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
@@ -89,18 +86,19 @@ body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"PingFang SC","Microso
 .btn-ghost{background:var(--accent-soft);color:var(--accent)}
 .more-btn{display:block;margin:10px auto;padding:8px 20px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--accent);cursor:pointer;font-size:12px;font-weight:600}
 
-/* ═══ Skill 网格 ═══ */
+/* ═══ Skill ═══ */
 .skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
 .skill-card{background:var(--card);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
-.skill-card h4{font-size:13px;margin-bottom:5px;font-weight:600}
+.skill-card h4{font-size:13px;font-weight:600;margin-bottom:4px}
 .skill-card p{font-size:11.5px;color:var(--sub);line-height:1.6}
 .skill-card .note{background:var(--accent-soft);border-radius:10px;padding:7px 10px;margin-bottom:7px;font-size:11.5px;color:var(--accent)}
 
-/* ═══ 底部快捷栏 ═══ */
-.bottombar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:12px;background:var(--card);border:1.5px solid var(--border);border-radius:24px;padding:8px 16px;box-shadow:0 4px 24px rgba(44,40,38,.1)}
-.bottombar .bbtn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 16px;border-radius:16px;cursor:pointer;border:none;background:transparent;color:var(--sub);font-size:10.5px;font-weight:600;transition:all .15s}
-.bottombar .bbtn .bi{font-size:22px;line-height:1}
-.bottombar .bbtn:active,.bottombar .bbtn:focus{background:var(--accent-soft);color:var(--accent)}
+/* ═══ 底部栏 ═══ */
+.bottombar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:60;display:flex;gap:10px;background:var(--card);border:1.5px solid var(--border);border-radius:22px;padding:7px 14px;box-shadow:0 4px 24px rgba(26,29,28,.08)}
+.bottombar button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 14px;border-radius:16px;cursor:pointer;border:none;background:transparent;color:var(--sub);font-size:10px;font-weight:600;transition:all .15s;white-space:nowrap}
+.bottombar button .bi{font-size:20px;line-height:1}
+.bottombar button:active{background:var(--accent-soft);color:var(--accent)}
+.bottombar .split{width:1px;background:var(--border);margin:4px 2px}
 
 /* ═══ 移动端 ═══ */
 @media(max-width:600px){
@@ -108,16 +106,15 @@ body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"PingFang SC","Microso
   .skill-grid{grid-template-columns:1fr}
   .header{padding:12px 10px}
   .main{padding:0 10px 130px}
-  .bottombar{bottom:12px;gap:8px;padding:6px 12px;border-radius:22px}
-  .bottombar .bbtn{padding:6px 14px}
-  .bottombar .bbtn .bi{font-size:20px}
+  .bottombar{bottom:12px;gap:6px;padding:6px 10px;border-radius:20px}
+  .bottombar button{padding:6px 10px}
 }
 </style>
 </head>
 <body>
 <div id="lock">
   <div class="lock-wrap">
-    <div class="lock-emoji">🏠</div>
+    <div class="lock-icon">🔐</div>
     <div class="lock-title">自媒体工作台</div>
     <div class="lock-sub">输入密码查看内容</div>
     <input id="pwd" type="password" placeholder="密码" autocomplete="off">
@@ -131,94 +128,73 @@ body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"PingFang SC","Microso
 
 <div id="app" style="display:none">
   <div class="header">
-    <button class="menu-btn" onclick="openDrawer()">☰</button>
+    <button class="burger" onclick="openDrawer()" aria-label="菜单">☰</button>
     <h1 id="view-title">概览</h1>
   </div>
   <div class="main" id="content"></div>
   <div class="bottombar">
-    <button class="bbtn" onclick="showView('inspirations');document.getElementById('insp-text')?.focus()"><span class="bi">💡</span>灵感</button>
-    <button class="bbtn" onclick="showView('hotspots')"><span class="bi">🔥</span>热点</button>
-    <button class="bbtn" onclick="showView('topics')"><span class="bi">🎯</span>选题</button>
+    <button onclick="openDrawer()"><span class="bi">☰</span>浏览</button>
+    <span class="split"></span>
+    <button onclick="showView('inspirations');setTimeout(()=>document.getElementById('insp-text')?.focus(),100)"><span class="bi">💡</span>灵感</button>
+    <button onclick="showView('hotspots')"><span class="bi">🔥</span>热点</button>
+    <button onclick="showView('topics')"><span class="bi">🎯</span>选题</button>
   </div>
 </div>
 
 <script>
-/* ═══ 加密常量 ═══ */
-const REPO="god-hu/proma-workbench-app";
-const DATA_API="https://api.github.com/repos/"+REPO+"/contents/data.json";
-const ENC_TOKEN="POlVZ5RRIDxFtTZ123MWMjXbOr39+eCt2XM/cILaInbzO/j39QvETORaWkbYAJqEnEKprnnUcruDJ2zFOAzqfT8Im58=";
-const ENC_SALT="y7xJsyAOMXxQvUcoum7w+g==";
+/* ═══ 加密 ═══ */
+const REPO="god-hu/proma-workbench-app",DATA_API="https://api.github.com/repos/"+REPO+"/contents/data.json";
+const ENC_TOKEN="HxpEyhcMGgfdkzcRUOm/BrnPDQTMaFTgN0anENggbf8GDwd2jL8WJGVOPbj32+UFyFz5iQRUS0ptWnKHkqD6ZGgrM58=",ENC_SALT="j3dKVBQ70ltUqMov7SDN0g==";
 let PWD=null,GH_TOKEN="",D=null;
-
-/* ═══ AES 工具 ═══ */
-function stripB64(s){return(s||"").replace(/\s+/g,"")}
-async function deriveKey(pwd,saltB64){
-  const salt=Uint8Array.from(atob(saltB64),c=>c.charCodeAt(0));
-  const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(pwd),"PBKDF2",false,["deriveKey"]);
-  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:1e5,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+function sb64(s){return(s||"").replace(/\s+/g,"")}
+async function dk(pwd,sb){
+  const s=Uint8Array.from(atob(sb),c=>c.charCodeAt(0));
+  const b=await crypto.subtle.importKey("raw",new TextEncoder().encode(pwd),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:s,iterations:1e5,hash:"SHA-256"},b,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
 }
-async function aesD(blobB64,saltB64,pwd){
-  const key=await deriveKey(pwd,saltB64);
-  const buf=Uint8Array.from(atob(stripB64(blobB64)),c=>c.charCodeAt(0));
-  const iv=buf.slice(0,12),ct=buf.slice(12);
-  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv},key,ct);
-  return new TextDecoder().decode(pt);
-}
-async function aesE(str,pwd,saltB64){
-  const key=await deriveKey(pwd,saltB64);
-  const iv=crypto.getRandomValues(new Uint8Array(12));
-  const ctBuf=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(str));
-  const ct=new Uint8Array(ctBuf),combined=new Uint8Array(12+ct.length);
-  combined.set(iv,0);combined.set(ct,12);
-  return btoa(String.fromCharCode.apply(null,combined));
-}
+async function aesD(bb,sb,pwd){const k=await dk(pwd,sb);const buf=Uint8Array.from(atob(sb64(bb)),c=>c.charCodeAt(0));return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},k,buf.slice(12)))}
+async function aesE(str,pwd,sb){const k=await dk(pwd,sb);const iv=crypto.getRandomValues(new Uint8Array(12));const cb=await crypto.subtle.encrypt({name:"AES-GCM",iv},k,new TextEncoder().encode(str));const ct=new Uint8Array(cb),c=new Uint8Array(12+ct.length);c.set(iv,0);c.set(ct,12);return btoa(String.fromCharCode.apply(null,c))}
 
 /* ═══ 解锁 ═══ */
 async function unlock(){
-  const pwd=document.getElementById("pwd").value;
-  if(!pwd)return;
+  const pwd=document.getElementById("pwd").value;if(!pwd)return;
   try{
-    GH_TOKEN=await aesD(ENC_TOKEN,ENC_SALT,pwd);
-    PWD=pwd;
-    document.getElementById("lock").style.display="none";
-    document.getElementById("app").style.display="block";
-    await loadData();
-    renderDrawer();showView("overview");
+    GH_TOKEN=await aesD(ENC_TOKEN,ENC_SALT,pwd);PWD=pwd;
+    document.getElementById("lock").style.display="none";document.getElementById("app").style.display="block";
+    await loadData();renderDrawer();showView("overview");
   }catch(e){document.getElementById("lockErr").textContent="密码错误"}
 }
 document.getElementById("pwd").addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
 
-/* ═══ 抽屉菜单 ═══ */
+/* ═══ 抽屉 ═══ */
 const MENU=[["overview","📊","概览"],["topics","🎯","选题"],["materials","📚","素材"],["inspirations","💡","灵感"],["hotspots","🔥","热点"],["skills","🧩","Skill"],["articles","📝","成品"],["publish","🚀","发布"]];
 let view="overview";
 function renderDrawer(){
-  document.getElementById("drawer").innerHTML=(()=>{
-    let h='<h3>内容资产</h3>';
-    MENU.forEach(m=>{h+=`<div class="drawer-item ${m[0]===view?'active':''}" onclick="showView('${m[0]}')"><span class="di">${m[1]}</span>${m[2]}</div>`});
-    h+='<div class="drawer-foot">自媒体工作台 · 加密版</div>';
-    return h;
-  })();
-}
+  document.getElementById("drawer").innerHTML=(()=>{let h='<h3>内容资产</h3>';MENU.forEach(m=>{h+=`<div class="drawer-item ${m[0]===view?"active":""}" onclick="showView('${m[0]}')"><span class="di">${m[1]}</span>${m[2]}</div>`});return h})()}
 function openDrawer(){document.getElementById("drawer").classList.add("open");document.getElementById("backdrop").classList.add("open")}
 function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("backdrop").classList.remove("open")}
 const TITLES={overview:"概览",topics:"选题库",materials:"素材库",inspirations:"灵感记录",hotspots:"热点雷达",skills:"Skill 中心",articles:"成品文章",publish:"发布记录"};
 function showView(v){view=v;document.getElementById("view-title").textContent=TITLES[v]||v;closeDrawer();renderDrawer();render();scrollTo({top:0})}
 
+/* ═══ 链接辅助 ═══ */
+const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function linkT(title,url){if(!url)return esc(title);const t=esc((title||"").length>120?title.slice(0,120)+"…":title);return`<a href="${url.replace(/"/g,"&quot;")}" target="_blank" rel="noopener">${t}</a>`}
+const bdg=(t,c)=>`<span class="badge ${c||""}">${esc(t)}</span>`;
+
 /* ═══ 数据 ═══ */
 async function loadData(){
   try{
     const r=await fetch(DATA_API,{headers:{Authorization:"Bearer "+GH_TOKEN,Accept:"application/vnd.github+json"}});
-    if(!r.ok)return;
-    const meta=await r.json();
-    if(meta&&meta.content){D=JSON.parse(await aesD(JSON.parse(atob(stripB64(meta.content))).ct,JSON.parse(atob(stripB64(meta.content))).iv,PWD))}
+    if(!r.ok)return;const meta=await r.json();
+    if(meta&&meta.content){D=JSON.parse(await aesD(JSON.parse(atob(sb64(meta.content))).ct,JSON.parse(atob(sb64(meta.content))).iv,PWD))}
     else D={topics:[],materials:[],articles:[],inspirations:[],hotspots:[],skills:[],publish:[],stats:{}};
     render();
   }catch(e){}
 }
 async function saveData(){
-  const saltB64=D.__salt||(D.__salt=btoa(String.fromCharCode.apply(null,crypto.getRandomValues(new Uint8Array(16)))));
-  const ct=await aesE(JSON.stringify(D),PWD,saltB64);
-  const enc=JSON.stringify({iv:saltB64,ct});
+  const sb=D.__salt||(D.__salt=btoa(String.fromCharCode.apply(null,crypto.getRandomValues(new Uint8Array(16)))));
+  const ct=await aesE(JSON.stringify(D),PWD,sb);
+  const enc=JSON.stringify({iv:sb,ct});
   const content=btoa(unescape(encodeURIComponent(enc)));
   const cur=await fetch(DATA_API,{headers:{Authorization:"Bearer "+GH_TOKEN,Accept:"application/vnd.github+json"}});
   let sha=null;if(cur.ok){const m=await cur.json();sha=m.sha}
@@ -228,20 +204,18 @@ async function saveData(){
 
 /* ═══ 渲染 ═══ */
 const Q=document.getElementById.bind(document);
-const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-const bd=t=>`<span class="badge badge-track">${esc(t)}</span>`;
 function render(){Q("content").innerHTML={overview:rv,topics:rt,materials:rm,inspirations:ri,hotspots:rh,skills:rs,articles:ra,publish:rp}[view]()}
 let tk="全部",tl=20;
-function rv(){const s=D.stats||{};return`<div class="stats">${[["选题",s.topics],["素材",s.materials],["灵感",s.inspirations],["成品",s.articles],["热点",s.hotspots],["Skill",s.skills]].map(x=>`<div class="stat"><div class="num">${x[1]||0}</div><div class="lbl">${x[0]}</div></div>`).join("")}</div><div class="card"><div class="t">📌 最近灵感</div>${(D.inspirations||[]).slice(-3).reverse().map(i=>`<div class="meta">💡 ${esc(i.text)}</div>`).join("")||'<div class="empty">暂无</div>'}</div><div class="card"><div class="t">🔥 最近热点</div>${(D.hotspots||[]).slice(0,3).map(h=>`<div class="meta">🔥 ${esc(h.title)}</div>`).join("")||'<div class="empty">暂无</div>'}</div>`}
-function rt(){let l=(D.topics||[]).filter(t=>tk==="全部"||t.track===tk);const ts=["全部",...new Set((D.topics||[]).map(t=>t.track))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===tk?"active":""}" onclick="tk='${t}';tl=20;render()">${t}</span>`).join("")}</div>${l.slice(0,tl).map(t=>`<div class="card"><div class="t">${esc(t.title)}${t.manual?' <span class="badge badge-track">手工</span>':''}</div><div class="meta">${bd(t.track)}${t.tonality?` <span class="pill-med">调性${t.tonality}</span>`:''}</div></div>`).join("")}${l.length>tl?`<button class="more-btn" onclick="tl+=20;render()">加载更多 (${l.length-tl})</button>`:''}`}
+function rv(){const s=D.stats||{};return`<div class="stats">${[["选题",s.topics],["素材",s.materials],["灵感",s.inspirations],["成品",s.articles],["热点",s.hotspots],["Skill",s.skills]].map(x=>`<div class="stat"><div class="num">${x[1]||0}</div><div class="lbl">${x[0]}</div></div>`).join("")}</div><div class="card"><div class="t">📌 最近灵感</div>${(D.inspirations||[]).slice(-3).reverse().map(i=>`<div class="meta"><span style="color:var(--ink)">💡 ${esc(i.text)}</span></div>`).join("")||'<div class="empty">暂无</div>'}</div><div class="card"><div class="t">🔥 最新热点</div>${(D.hotspots||[]).slice(0,3).map(h=>`<div class="meta">🔥 ${linkT(h.title,h.url)}</div>`).join("")||'<div class="empty">暂无</div>'}</div>`}
+function rt(){let l=(D.topics||[]).filter(t=>tk==="全部"||t.track===tk);const ts=["全部",...new Set((D.topics||[]).map(t=>t.track))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===tk?"active":""}" onclick="tk='${t}';tl=20;render()">${t}</span>`).join("")}</div>${l.slice(0,tl).map(t=>`<div class="card"><div class="t">${linkT(t.title,t.url)}${t.manual?' '+bdg('手工'):''}</div><div class="meta">${bdg(t.track)}${t.tonality?` <span class="badge badge-amber">调性${t.tonality}</span>`:''}${t.author?` <span>${esc(t.author)}</span>`:''}</div></div>`).join("")}${l.length>tl?`<button class="more-btn" onclick="tl+=20;render()">加载更多 (${l.length-tl})</button>`:''}`}
 let mk="全部",ml=20;
-function rm(){let l=(D.materials||[]).filter(m=>mk==="全部"||(m.source||m.category||"")===mk);const ts=["全部",...new Set((D.materials||[]).map(m=>m.source||m.category||"未分类"))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===mk?"active":""}" onclick="mk='${t}';ml=20;render()">${t}</span>`).join("")}</div>${l.slice(0,ml).map(m=>`<div class="card"><div class="t">${esc(m.title)}</div><div class="meta">${bd(m.source||m.category||"")}${m.author?` <span>${esc(m.author)}</span>`:''}${m.read?` <span>${esc(m.read)}</span>`:''}</div></div>`).join("")}${l.length>ml?`<button class="more-btn" onclick="ml+=20;render()">加载更多 (${l.length-ml})</button>`:''}`}
-function ri(){const list=(D.inspirations||[]).slice().reverse();return`<div class="entry"><textarea id="insp-text" rows="2" placeholder="记一条灵感…"></textarea><div style="margin-top:10px"><button class="btn" onclick="addInsp()">保存灵感</button></div></div>${list.map(i=>`<div class="card"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?` <span>${esc(i.source)}</span>`:''}</div></div>`).join("")||'<div class="empty">暂无灵感</div>'}`}
+function rm(){let l=(D.materials||[]).filter(m=>mk==="全部"||(m.source||m.category||"")===mk);const ts=["全部",...new Set((D.materials||[]).map(m=>m.source||m.category||"未分类"))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===mk?"active":""}" onclick="mk='${t}';ml=20;render()">${t}</span>`).join("")}</div>${l.slice(0,ml).map(m=>`<div class="card"><div class="t">${linkT(m.title,m.url)}</div><div class="meta">${bdg(m.source||m.category||"")}${m.author?` <span>${esc(m.author)}</span>`:''}${m.read?` <span>👁 ${esc(m.read)}</span>`:''}</div></div>`).join("")}${l.length>ml?`<button class="more-btn" onclick="ml+=20;render()">加载更多 (${l.length-ml})</button>`:''}`}
+function ri(){const list=(D.inspirations||[]).slice().reverse();return`<div class="entry"><textarea id="insp-text" rows="2" placeholder="记一条灵感：今天看到……"></textarea><div style="margin-top:10px"><button class="btn" onclick="addInsp()">保存灵感</button></div></div>${list.map(i=>`<div class="card"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?` <span>${esc(i.source)}</span>`:''}</div></div>`).join("")||'<div class="empty">暂无灵感</div>'}`}
 async function addInsp(){const txt=Q("insp-text").value.trim();if(!txt)return;if(!D.inspirations)D.inspirations=[];D.inspirations.push({text:txt,source:"手机",created:new Date().toISOString().slice(0,10)});D.stats=D.stats||{};D.stats.inspirations=D.inspirations.length;Q("insp-text").value="";render();try{await saveData()}catch(e){}}
-function rh(){return`<div class="stats"><div class="stat"><div class="num">${(D.hotspots||[]).length}</div><div class="lbl">热点</div></div></div>${(D.hotspots||[]).map(h=>`<div class="card"><div class="t">${esc(h.title)}</div><div class="meta">${bd(h.track)}<span>${esc(h.platform||"")}</span></div></div>`).join("")||'<div class="empty">暂无热点</div>'}`}
-function rs(){return`<div class="skill-grid">${(D.skills||[]).map(s=>`<div class="skill-card"><h4>${esc(s.name)}</h4>${s.note?`<div class="note">🎯 ${esc(s.note)}</div>`:""}<p>${esc(s.desc||"")}</p></div>`).join("")||'<div class="empty">暂无 Skill</div>'}</div>`}
-function ra(){return(D.articles||[]).map(a=>`<div class="card"><div class="t">${esc(a.name)}</div><div class="meta">${bd(a.cat||"")}<span>${esc(a.date||"")}</span></div></div>`).join("")||'<div class="empty">暂无成品</div>'}
-function rp(){return(D.publish||[]).map(p=>`<div class="card"><div class="t">${esc(p.title)}</div><div class="meta">${bd(p.platform||"")}<span>${esc(p.date||"")}</span>${p.data?`<span>${esc(p.data)}</span>`:''}</div></div>`).join("")||'<div class="empty">暂无发布记录</div>'}
+function rh(){return`<div class="stats"><div class="stat"><div class="num">${(D.hotspots||[]).length}</div><div class="lbl">热点</div></div></div>${(D.hotspots||[]).map(h=>`<div class="card"><div class="t">${linkT(h.title,h.url)}</div><div class="meta">${bdg(h.track)}<span>📡 ${esc(h.platform||"")}</span>${h.tonality?` <span class="badge badge-amber">调性${h.tonality}</span>`:''}</div></div>`).join("")||'<div class="empty">暂无热点</div>'}`}
+function rs(){return`<div class="skill-grid">${(D.skills||[]).map(s=>`<div class="skill-card"><h4>${esc(s.name)}</h4>${s.note?`<div class="note">${esc(s.note)}</div>`:""}<p>${esc(s.desc||"")}</p></div>`).join("")||'<div class="empty">暂无 Skill</div>'}</div>`}
+function ra(){return(D.articles||[]).map(a=>`<div class="card"><div class="t">${esc(a.name)}</div><div class="meta">${bdg(a.cat||"")}<span>${esc(a.date||"")}</span></div></div>`).join("")||'<div class="empty">暂无成品</div>'}
+function rp(){return(D.publish||[]).map(p=>`<div class="card"><div class="t">${esc(p.title)}</div><div class="meta">${bdg(p.platform||"")}<span>${esc(p.date||"")}</span>${p.data?`<span>${esc(p.data)}</span>`:''}</div></div>`).join("")||'<div class="empty">暂无发布记录</div>'}
 </script>
 </body>
 </html>
