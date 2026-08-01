@@ -1,6 +1,7 @@
 token.json
 
-# 临时调试产物
+# 临时调试产物（Edge headless 用户数据、node 依赖、验证脚本输出）
 _edge_profile*/
+_epv/
 node_modules/
 _cdp*.txt
