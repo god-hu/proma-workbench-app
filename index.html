@@ -178,6 +178,11 @@ a:hover{text-decoration:underline;color:var(--accent-ink)}
   .drawer-m.open{transform:translateX(0)}
   .backdrop{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s}
   .backdrop.open{opacity:1;pointer-events:auto}
+  .bottombar{display:none}
+}
+
+/* 仅真手机（≤600px）显示底部快捷栏；窄窗/桌面用侧栏或抽屉 */
+@media(max-width:600px){
   .bottombar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:60;display:flex;gap:6px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:7px 10px;box-shadow:0 4px 22px rgba(16,24,40,.12)}
   .bottombar button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 13px;border-radius:10px;cursor:pointer;border:none;background:transparent;color:var(--sub);font-size:10px;font-weight:600}
   .bottombar button .bi{font-size:19px;line-height:1}
