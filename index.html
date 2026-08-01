@@ -6,108 +6,161 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="自媒体工作台">
-<meta name="theme-color" content="#f7f6f4">
+<meta name="theme-color" content="#2962ff">
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <title>自媒体工作台</title>
 <style>
 :root{
-  --bg:#f7f6f4;--card:#fff;--border:#e8e6e3;--border-light:#f0eeeb;
-  --ink:#1a1a1a;--sub:#6b6b6b;--muted:#a8a5a0;
-  --accent:#5f6b7a;--accent-soft:#f0f1f4;--link:#4a6a8a;
-  --radius:8px;
+  --bg:#f5f6f8;--card:#fff;--border:#e9ebef;--border-light:#f1f3f5;
+  --ink:#14161a;--sub:#6b7280;--muted:#9aa1ac;
+  --accent:#2962ff;--accent-soft:#eaf0ff;--accent-ink:#1d4ed8;
+  --link:#2962ff;
+  --radius:12px;--shadow:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.06);
+  --shadow-hover:0 6px 20px rgba(41,98,255,.12);
+  --sb-w:220px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
+html,body{height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:var(--link);text-decoration:none}
-a:hover{text-decoration:underline;color:#3a5a7a}
+a:hover{text-decoration:underline;color:var(--accent-ink)}
 
-/* lock */
-#lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:200}
-.lock-wrap{text-align:center;width:min(320px,86vw)}
-.lock-wrap .icon{font-size:36px;margin-bottom:16px}
-.lock-wrap h2{font-size:19px;font-weight:700;margin-bottom:4px;letter-spacing:-.3px}
-.lock-wrap .sub{color:var(--sub);font-size:12px;margin-bottom:22px}
-#pwd{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:8px;font-size:15px;outline:none;background:var(--card);text-align:center;transition:border .2s}
-#pwd:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.lock-btn{width:100%;margin-top:10px;padding:11px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+/* ===== 锁定页 ===== */
+#lock{position:fixed;inset:0;background:linear-gradient(135deg,#2962ff 0%,#1d4ed8 100%);display:flex;align-items:center;justify-content:center;z-index:200}
+.lock-wrap{text-align:center;width:min(340px,88vw);background:rgba(255,255,255,.12);backdrop-filter:blur(12px);padding:38px 30px;border-radius:20px;border:1px solid rgba(255,255,255,.2)}
+.lock-wrap .icon{font-size:40px;margin-bottom:14px}
+.lock-wrap h2{font-size:21px;font-weight:700;margin-bottom:6px;letter-spacing:-.3px;color:#fff}
+.lock-wrap .sub{color:rgba(255,255,255,.8);font-size:12.5px;margin-bottom:24px}
+#pwd{width:100%;padding:13px 15px;border:1px solid rgba(255,255,255,.25);border-radius:10px;font-size:15px;outline:none;background:rgba(255,255,255,.92);text-align:center;transition:border .2s}
+#pwd:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+.lock-btn{width:100%;margin-top:12px;padding:12px;border:none;border-radius:10px;background:#fff;color:var(--accent);font-size:14px;font-weight:700;cursor:pointer}
 .lock-btn:active{opacity:.85}
-.lock-err{color:#c46;font-size:12px;margin-top:8px;min-height:14px}
+.lock-err{color:#ffd9d9;font-size:12px;margin-top:10px;min-height:14px}
 
-/* drawer */
-.header{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;position:sticky;top:0;z-index:40;background:var(--bg)}
-.header h1{font-size:16px;font-weight:700;flex:1;letter-spacing:-.2px}
-.burger{width:34px;height:34px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--ink)}
-.burger:active{background:var(--accent-soft)}
-.backdrop{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .2s}
-.backdrop.open{opacity:1;pointer-events:auto}
-.drawer{position:fixed;top:0;left:0;bottom:0;width:260px;z-index:95;background:var(--card);transform:translateX(-100%);transition:transform .25s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:20px 14px;border-right:1px solid var(--border)}
-.drawer.open{transform:translateX(0);box-shadow:4px 0 30px rgba(0,0,0,.06)}
-.drawer h3{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;padding:6px 10px;margin:8px 0 4px}
-.drawer-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:7px;cursor:pointer;font-size:13.5px;color:var(--ink);transition:background .12s;margin-bottom:1px}
-.drawer-item:hover,.drawer-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
-.drawer-item .di{font-size:16px;width:20px;text-align:center}
+/* ===== 桌面布局：侧栏 + 主区 ===== */
+#app{display:none}
+.shell{display:flex;min-height:100vh}
+/* 侧栏 */
+.sidebar{width:var(--sb-w);flex-shrink:0;background:#fff;border-right:1px solid var(--border);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:18px 14px}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#2962ff,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
+.brand .bt{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.brand .bs{font-size:11px;color:var(--muted)}
+.nav-group-title{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;padding:14px 10px 6px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13.5px;color:var(--sub);transition:all .13s;margin-bottom:2px;position:relative}
+.nav-item .ni{font-size:17px;width:22px;text-align:center}
+.nav-item:hover{background:var(--bg);color:var(--ink)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent-ink);font-weight:600}
+.nav-item.active::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--accent);border-radius:0 3px 3px 0}
+.side-foot{margin-top:auto;padding:10px;font-size:11px;color:var(--muted);border-top:1px solid var(--border-light)}
 
-/* main */
-.main{padding:0 18px 130px;max-width:860px;margin:0 auto}
+/* 主区 */
+.main-wrap{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(245,246,248,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:16px}
+.topbar h1{font-size:18px;font-weight:700;letter-spacing:-.3px;flex:1;min-width:0}
+.topbar .burger{display:none}
+.topbar .sync{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.search-box{flex:0 0 280px;position:relative}
+.search-box input{width:100%;padding:9px 14px 9px 34px;border:1px solid var(--border);border-radius:10px;background:#fff;font-size:13.5px;outline:none;transition:border .15s,box-shadow .15s}
+.search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search-box .si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px}
+.search-box .sk{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:1px 5px}
+.content{padding:24px 28px 120px;max-width:1080px;width:100%;margin:0 auto}
 
-/* stats */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 12px;text-align:center}
-.stat .num{font-size:22px;font-weight:700;letter-spacing:-.3px}
-.stat .lbl{font-size:11px;color:var(--sub);margin-top:2px}
+/* ===== 概览：KPI ===== */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:22px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;cursor:pointer}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:.85}
+.kpi .kn{font-size:25px;font-weight:700;letter-spacing:-.5px;line-height:1.1}
+.kpi .kl{font-size:11.5px;color:var(--sub);margin-top:4px}
+.kpi .ki{position:absolute;right:12px;top:12px;font-size:16px;opacity:.55}
 
-/* chips */
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-.chip{padding:5px 13px;border-radius:6px;background:var(--card);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--sub);transition:all .12s}
+/* 漏斗步骤条 */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);margin-bottom:18px}
+.panel h3{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.funnel{display:flex;align-items:stretch;gap:0}
+.fstep{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;padding:0 4px}
+.fstep .fnum{font-size:20px;font-weight:700}
+.fstep .flbl{font-size:11.5px;color:var(--sub)}
+.fstep .fdot{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff}
+.fstep:not(:last-child)::after{content:"";position:absolute;top:19px;left:calc(50% + 24px);right:calc(-50% + 24px);height:2px;background:var(--border)}
+.fcols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+
+/* ===== chips / section ===== */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.chip{padding:6px 14px;border-radius:8px;background:var(--card);border:1px solid var(--border);font-size:12.5px;cursor:pointer;color:var(--sub);transition:all .12s}
 .chip:hover{color:var(--ink);border-color:var(--muted)}
 .chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.sec-title{font-size:12px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin:22px 0 11px;display:flex;align-items:center;gap:7px}
 
-/* card */
-.card{border:1px solid var(--border);border-radius:var(--radius);padding:12px 15px;margin-bottom:8px;background:var(--card);display:flex;align-items:flex-start;gap:12px}
-.card .cl{width:3px;min-height:40px;border-radius:2px;flex-shrink:0;align-self:stretch}
+/* ===== 卡片 ===== */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px 16px;margin-bottom:9px;display:flex;align-items:flex-start;gap:13px;box-shadow:var(--shadow);transition:transform .13s,box-shadow .13s,border-color .13s}
+.card:hover{transform:translateY(-1px);box-shadow:var(--shadow-hover);border-color:#d6def5}
+.card .cl{width:3px;min-height:42px;border-radius:2px;flex-shrink:0;align-self:stretch}
 .card .cr{flex:1;min-width:0}
-.card .t{font-size:14px;font-weight:600;line-height:1.5;word-break:break-word}
+.card .t{font-size:14px;font-weight:600;line-height:1.55;word-break:break-word}
 .card .t a{color:var(--ink)}
 .card .t a:hover{color:var(--accent)}
 .card .t a:after{content:' ↗';font-size:10px;color:var(--muted)}
-.card .meta{color:var(--sub);font-size:12px;margin-top:5px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
-.badge{display:inline-flex;align-items:center;padding:1px 7px;border-radius:5px;font-size:10.5px;font-weight:600;background:#f0efed;color:var(--sub)}
-.tag-amber{background:#faf3e8;color:#b8843c}
-.tag-red{background:#f8eded;color:#b86060}
-.empty{color:var(--sub);padding:28px 20px;text-align:center;background:var(--card);border:1px dashed var(--border);border-radius:var(--radius)}
-.sec-title{font-size:12px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin:20px 0 10px}
+.card .meta{color:var(--sub);font-size:12px;margin-top:6px;display:flex;flex-wrap:wrap;gap:5px 11px;align-items:center}
+.badge{display:inline-flex;align-items:center;padding:1px 8px;border-radius:6px;font-size:10.5px;font-weight:600;background:#f1f3f5;color:var(--sub)}
+.tag-amber{background:#fff4e5;color:#b8843c}
+.tag-red{background:#fdecec;color:#c0392b}
+.empty{color:var(--sub);padding:32px 20px;text-align:center;background:var(--card);border:1px dashed var(--border);border-radius:var(--radius)}
+.more-btn{display:block;margin:12px auto;padding:8px 20px;border-radius:9px;border:1px solid var(--border);background:var(--card);color:var(--accent);cursor:pointer;font-size:12.5px;font-weight:600;transition:all .12s}
+.more-btn:hover{background:var(--accent-soft);border-color:var(--accent)}
 
-/* entry */
-.entry{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 15px;margin-bottom:12px}
-.entry textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:7px;font-size:13px;font-family:inherit;outline:none;background:var(--bg);resize:none;transition:border .2s}
-.entry textarea:focus{border-color:var(--accent)}
-.btn{display:inline-flex;align-items:center;gap:4px;padding:8px 16px;border-radius:7px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:var(--accent);color:#fff}
+/* 录入 */
+.entry{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.entry textarea{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:9px;font-size:13.5px;font-family:inherit;outline:none;background:var(--bg);resize:none;transition:border .2s}
+.entry textarea:focus{border-color:var(--accent);background:#fff}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:var(--accent);color:#fff;transition:opacity .12s}
 .btn:active{opacity:.85}
-.btn-ghost{background:var(--accent-soft);color:var(--accent)}
-.more-btn{display:block;margin:10px auto;padding:7px 18px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--accent);cursor:pointer;font-size:12px;font-weight:600}
+.btn-ghost{background:var(--accent-soft);color:var(--accent-ink)}
 
-/* skill */
-.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
-.skill-card{border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;background:var(--card)}
-.skill-card h4{font-size:13px;font-weight:600;margin-bottom:3px}
-.skill-card p{font-size:11.5px;color:var(--sub);line-height:1.6}
-.skill-card .note{background:var(--accent-soft);border-radius:6px;padding:6px 9px;margin-bottom:6px;font-size:11px;color:var(--accent)}
+/* Skill */
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.skill-card{border:1px solid var(--border);border-radius:var(--radius);padding:15px 17px;background:var(--card);box-shadow:var(--shadow);transition:transform .13s,box-shadow .13s}
+.skill-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.skill-card h4{font-size:14px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.skill-card p{font-size:12px;color:var(--sub);line-height:1.65}
+.skill-card .note{background:var(--accent-soft);border-radius:8px;padding:7px 10px;margin-bottom:7px;font-size:11.5px;color:var(--accent-ink)}
 
-/* bottom */
-.bottombar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:60;display:flex;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:6px 10px;box-shadow:0 2px 16px rgba(0,0,0,.06)}
-.bottombar button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 12px;border-radius:7px;cursor:pointer;border:none;background:transparent;color:var(--sub);font-size:10px;font-weight:600;transition:all .12s}
-.bottombar button .bi{font-size:18px;line-height:1}
-.bottombar button:active{background:var(--accent-soft);color:var(--accent)}
-.bottombar .split{width:1px;background:var(--border);margin:3px 2px}
-@media(max-width:600px){
-  .stats{grid-template-columns:repeat(3,1fr)}
+/* 图片网格 */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.img-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.img-card .thumb{height:120px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.img-card .thumb img{max-width:100%;max-height:100%;object-fit:cover}
+.img-card .info{padding:9px 11px;font-size:11px;color:var(--sub)}
+.img-card .info .nm{color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 移动端底部栏 */
+.bottombar{display:none}
+@media(max-width:860px){
+  .sidebar{display:none}
+  .topbar{padding:12px 16px 10px;position:sticky;top:0}
+  .topbar .burger{display:flex;width:36px;height:36px;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:9px;background:#fff;cursor:pointer;font-size:16px}
+  .search-box{flex:1;min-width:0}
+  .search-box .sk{display:none}
+  .topbar .sync{display:none}
+  .content{padding:18px 16px 130px}
+  .kpis{grid-template-columns:repeat(3,1fr);gap:9px}
+  .kpi .kn{font-size:21px}
+  .fcols{grid-template-columns:1fr}
   .skill-grid{grid-template-columns:1fr}
-  .header{padding:12px 10px 8px}
-  .main{padding:0 10px 130px}
-  .bottombar{bottom:12px;gap:4px;padding:5px 8px}
-  .bottombar button{padding:5px 8px}
+  /* 移动端抽屉 */
+  .drawer-m{position:fixed;top:0;left:0;bottom:0;width:248px;z-index:95;background:#fff;transform:translateX(-100%);transition:transform .25s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:18px 14px;border-right:1px solid var(--border);box-shadow:4px 0 30px rgba(0,0,0,.08)}
+  .drawer-m.open{transform:translateX(0)}
+  .backdrop{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s}
+  .backdrop.open{opacity:1;pointer-events:auto}
+  .bottombar{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:60;display:flex;gap:6px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:7px 10px;box-shadow:0 4px 22px rgba(16,24,40,.12)}
+  .bottombar button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 13px;border-radius:10px;cursor:pointer;border:none;background:transparent;color:var(--sub);font-size:10px;font-weight:600}
+  .bottombar button .bi{font-size:19px;line-height:1}
+  .bottombar button:active{background:var(--accent-soft);color:var(--accent)}
+  .bottombar .split{width:1px;background:var(--border);margin:4px 2px}
 }
 </style>
 </head>
@@ -122,15 +175,40 @@ a:hover{text-decoration:underline;color:#3a5a7a}
   </div>
 </div>
 
-<div class="backdrop" id="backdrop" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer"></div>
+<div id="app">
+  <div class="shell">
+    <!-- 桌面侧栏 -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">📊</div>
+        <div><div class="bt">自媒体工作台</div><div class="bs">Proma Workbench</div></div>
+      </div>
+      <div class="nav-group-title">内容资产</div>
+      <div id="nav-side"></div>
+      <div class="side-foot" id="side-foot">数据本地加密 · 实时同步</div>
+    </aside>
 
-<div id="app" style="display:none">
-  <div class="header">
-    <button class="burger" onclick="openDrawer()" aria-label="菜单">☰</button>
-    <h1 id="view-title">概览</h1>
+    <!-- 主区 -->
+    <div class="main-wrap">
+      <div class="topbar">
+        <button class="burger" onclick="openDrawer()">☰</button>
+        <h1 id="view-title">概览</h1>
+        <div class="search-box">
+          <span class="si">🔍</span>
+          <input id="search" placeholder="搜索标题 / 内容 / Skill…" oninput="applyFilter()">
+          <span class="sk">⌘K</span>
+        </div>
+        <div class="sync" id="sync-info"></div>
+      </div>
+      <div class="content" id="content"></div>
+    </div>
   </div>
-  <div class="main" id="content"></div>
+
+  <!-- 移动端抽屉 -->
+  <div class="backdrop" id="backdrop" onclick="closeDrawer()"></div>
+  <div class="drawer-m" id="drawer-m"></div>
+
+  <!-- 移动端底部栏 -->
   <div class="bottombar">
     <button onclick="openDrawer()"><span class="bi">☰</span>浏览</button>
     <span class="split"></span>
@@ -151,21 +229,33 @@ async function aesE(str,pwd,sb){const k=await dk(pwd,sb);const iv=crypto.getRand
 
 async function unlock(){
   const pwd=document.getElementById("pwd").value;if(!pwd)return;
-  try{GH_TOKEN=await aesD(ENC_TOKEN,ENC_SALT,pwd);PWD=pwd;document.getElementById("lock").style.display="none";document.getElementById("app").style.display="block";await loadData();renderDrawer();showView("overview")}
+  try{GH_TOKEN=await aesD(ENC_TOKEN,ENC_SALT,pwd);PWD=pwd;document.getElementById("lock").style.display="none";document.getElementById("app").style.display="block";await loadData();renderNav();renderDrawerM();showView("overview")}
   catch(e){document.getElementById("lockErr").textContent="密码错误"}
 }
 document.getElementById("pwd").addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
+// ⌘K / Ctrl+K 聚焦搜索
+document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();document.getElementById("search")?.focus()}});
 
-const MENU=[["overview","📊","概览"],["topics","🎯","选题"],["materials","📚","素材"],["inspirations","💡","灵感"],["hotspots","🔥","热点"],["skills","🧩","Skill"],["articles","📝","成品"],["publish","🚀","发布"]];
+const MENU=[["overview","📊","概览驾驶舱"],["topics","🎯","选题库"],["materials","📚","素材库"],["inspirations","💡","灵感记录"],["hotspots","🔥","热点雷达"],["skills","🧩","Skill 中心"],["articles","📝","成品文章"],["publish","🚀","发布记录"]];
 let view="overview";
-function renderDrawer(){document.getElementById("drawer").innerHTML=(()=>{let h='<h3>内容资产</h3>';MENU.forEach(m=>{h+=`<div class="drawer-item ${m[0]===view?"active":""}" onclick="showView('${m[0]}')"><span class="di">${m[1]}</span>${m[2]}</div>`});return h})()}
-function openDrawer(){document.getElementById("drawer").classList.add("open");document.getElementById("backdrop").classList.add("open")}
-function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("backdrop").classList.remove("open")}
-const TITLES={overview:"概览",topics:"选题库",materials:"素材库",inspirations:"灵感记录",hotspots:"热点雷达",skills:"Skill 中心",articles:"成品文章",publish:"发布记录"};
-function showView(v){view=v;document.getElementById("view-title").textContent=TITLES[v]||v;closeDrawer();renderDrawer();render();scrollTo({top:0})}
+function renderNav(){document.getElementById("nav-side").innerHTML=MENU.map(m=>`<div class="nav-item ${m[0]===view?"active":""}" id="nav-${m[0]}" onclick="showView('${m[0]}')"><span class="ni">${m[1]}</span>${m[2]}</div>`).join("")}
+function renderDrawerM(){document.getElementById("drawer-m").innerHTML=`<div class="brand"><div class="logo">📊</div><div><div class="bt">自媒体工作台</div></div></div>`+MENU.map(m=>`<div class="nav-item ${m[0]===view?"active":""}" onclick="showView('${m[0]}')"><span class="ni">${m[1]}</span>${m[2]}</div>`).join("")}
+function openDrawer(){document.getElementById("drawer-m").classList.add("open");document.getElementById("backdrop").classList.add("open")}
+function closeDrawer(){document.getElementById("drawer-m").classList.remove("open");document.getElementById("backdrop").classList.remove("open")}
+const TITLES={overview:"概览驾驶舱",topics:"选题库",materials:"素材库",inspirations:"灵感记录",hotspots:"热点雷达",skills:"Skill 中心",articles:"成品文章",publish:"发布记录"};
+function showView(v){view=v;document.getElementById("view-title").textContent=TITLES[v]||v;closeDrawer();renderNav();renderDrawerM();render();scrollTo({top:0})}
 
 async function loadData(){
-  try{const r=await fetch(DATA_API,{headers:{Authorization:"Bearer "+GH_TOKEN,Accept:"application/vnd.github+json"}});if(!r.ok)return;const meta=await r.json();if(meta&&meta.content){D=JSON.parse(await aesD(JSON.parse(atob(sb64(meta.content))).ct,JSON.parse(atob(sb64(meta.content))).iv,PWD))}else D={topics:[],materials:[],articles:[],inspirations:[],hotspots:[],skills:[],publish:[],stats:{}};render()}catch(e){}}
+  try{
+    const r=await fetch(DATA_API,{headers:{Authorization:"Bearer "+GH_TOKEN,Accept:"application/vnd.github+json"}});
+    if(!r.ok)return;
+    const meta=await r.json();
+    if(meta&&meta.content){D=JSON.parse(await aesD(JSON.parse(atob(sb64(meta.content))).ct,JSON.parse(atob(sb64(meta.content))).iv,PWD))}
+    else D={topics:[],materials:[],articles:[],inspirations:[],hotspots:[],skills:[],publish:[],stats:{}};
+    if(D.generated_at) document.getElementById("sync-info").textContent="更新于 "+D.generated_at;
+    render();
+  }catch(e){}
+}
 async function saveData(){const sb=D.__salt||(D.__salt=btoa(String.fromCharCode.apply(null,crypto.getRandomValues(new Uint8Array(16)))));const ct=await aesE(JSON.stringify(D),PWD,sb);const enc=JSON.stringify({iv:sb,ct});const content=btoa(unescape(encodeURIComponent(enc)));const cur=await fetch(DATA_API,{headers:{Authorization:"Bearer "+GH_TOKEN,Accept:"application/vnd.github+json"}});let sha=null;if(cur.ok){const m=await cur.json();sha=m.sha}const body={message:"update",content};if(sha)body.sha=sha;await fetch(DATA_API,{method:"PUT",headers:{Authorization:"Bearer "+GH_TOKEN,"Content-Type":"application/json",Accept:"application/vnd.github+json"},body:JSON.stringify(body)})}
 
 const Q=document.getElementById.bind(document);
@@ -174,18 +264,52 @@ function link(title,url){if(!url)return esc(title);const t=esc((title||"").lengt
 const COLORS={"心理学·深度":"#7b93c4","心理学·情感关系":"#c47b8e","星座·占星":"#9b7bc4","玄学·疗愈":"#c49b7b","人生感悟·文案":"#7bc49b","亲子·教育":"#c4a67b","社会观察·分析":"#9e9e9e","生活智慧·干货":"#7bb4c4","未分类":"#ccc","新赛道·发现":"#b0b0b0"};
 function clr(t){return COLORS[t]||"#ccc"}
 
+/* ===== 搜索过滤（真实过滤当前视图卡片） ===== */
+function applyFilter(){
+  const q=(document.getElementById("search")?.value||"").trim().toLowerCase();
+  document.querySelectorAll("#content .card, #content .skill-card").forEach(c=>{
+    const hit=!q||(c.textContent||"").toLowerCase().includes(q);
+    c.style.display=hit?"":"none";
+  });
+}
+
 function render(){Q("content").innerHTML={overview:rv,topics:rt,materials:rm,inspirations:ri,hotspots:rh,skills:rs,articles:ra,publish:rp}[view]()}
+
+/* ===== 概览 ===== */
+function rv(){
+  const s=D.stats||{};
+  const kpis=[["🎯","选题",s.topics||0],["📚","素材",s.materials||0],["💡","灵感",s.inspirations||0],["📝","成品",s.articles||0],["🔥","热点",s.hotspots||0],["🧩","Skill",s.skills||0]];
+  const kpiHTML=`<div class="kpis">${kpis.map((k,i)=>`<div class="kpi" onclick="showView('${['topics','materials','inspirations','articles','hotspots','skills'][i]}')"><span class="ki">${k[0]}</span><div class="kn">${k[2]}</div><div class="kl">${k[1]}</div></div>`).join("")}</div>`;
+  const fsteps=[["💡","灵感",s.inspirations||0,"#9b7bc4"],["🎯","选题",s.topics||0,"#2962ff"],["📝","成品",s.articles||0,"#0ea5e9"],["🚀","发布",s.publish||0,"#22c55e"]];
+  const funnel=`<div class="panel"><h3>📈 内容漏斗</h3><div class="funnel">${fsteps.map(f=>`<div class="fstep"><div class="fdot" style="background:${f[3]}">${f[0]}</div><div class="fnum">${f[2]}</div><div class="flbl">${f[1]}</div></div>`).join("")}</div></div>`;
+  const inspHTML=`<div class="panel"><h3>💡 最近灵感</h3>${(D.inspirations||[]).slice(-4).reverse().map(i=>`<div class="card"><div class="cl" style="background:#c4a07b"></div><div class="cr"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?`<span>${esc(i.source)}</span>`:""}</div></div></div>`).join("")||'<div class="empty">暂无灵感</div>'}</div>`;
+  const hotHTML=`<div class="panel"><h3>🔥 最新热点</h3>${(D.hotspots||[]).slice(0,4).map(h=>`<div class="card"><div class="cl" style="background:#c45b5b"></div><div class="cr"><div class="t">${link(h.title,h.url)}</div><div class="meta">${h.platform?`<span>📡 ${esc(h.platform)}</span>`:""}<span>${esc(h.track||"")}</span></div></div></div>`).join("")||'<div class="empty">暂无热点</div>'}</div>`;
+  return kpiHTML+funnel+`<div class="fcols">${inspHTML}${hotHTML}</div>`;
+}
+
+/* ===== 选题 ===== */
 let tk="全部",tl=40;
-function rv(){const s=D.stats||{};return`<div class="stats">${[["选题",s.topics],["素材",s.materials],["灵感",s.inspirations],["成品",s.articles],["热点",s.hotspots],["Skill",s.skills]].map(x=>`<div class="stat"><div class="num">${x[1]||0}</div><div class="lbl">${x[0]}</div></div>`).join("")}</div><div class="sec-title">最近灵感</div>${(D.inspirations||[]).slice(-3).reverse().map(i=>`<div class="card"><div class="cl" style="background:#c4a07b"></div><div class="cr"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?`<span>${esc(i.source)}</span>`:''}</div></div></div>`).join("")||'<div class="empty">暂无</div>'}<div class="sec-title">最新热点</div>${(D.hotspots||[]).slice(0,3).map(h=>`<div class="card"><div class="cl" style="background:#c45b5b"></div><div class="cr"><div class="t">${link(h.title,h.url)}</div><div class="meta">${h.platform?`<span>📡 ${esc(h.platform)}</span>`:''}</div></div></div>`).join("")||'<div class="empty">暂无</div>'}`}
-function rt(){let l=(D.topics||[]).filter(t=>tk==="全部"||t.track===tk);const ts=["全部",...new Set((D.topics||[]).map(t=>t.track))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===tk?"active":""}" onclick="tk='${t}';tl=40;render()">${t}</span>`).join("")}</div>${l.slice(0,tl).map(t=>`<div class="card"><div class="cl" style="background:${clr(t.track)}"></div><div class="cr"><div class="t">${link(t.title,t.url)}${t.manual?' <span class="badge">手工</span>':''}</div><div class="meta"><span>${esc(t.track)}</span>${t.tonality?`<span class="tag-amber">调性${t.tonality}</span>`:''}${t.author?`<span>${esc(t.author)}</span>`:''}${t.read?`<span>👁 ${esc(t.read)}</span>`:''}</div></div></div>`).join("")}${l.length>tl?`<button class="more-btn" onclick="tl+=40;render()">加载更多 (${l.length-tl})</button>`:''}`}
+function rt(){let l=(D.topics||[]).filter(t=>tk==="全部"||t.track===tk);const ts=["全部",...new Set((D.topics||[]).map(t=>t.track))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===tk?"active":""}" onclick="tk='${t}';tl=40;render()">${t}</span>`).join("")}</div>${l.slice(0,tl).map(t=>`<div class="card"><div class="cl" style="background:${clr(t.track)}"></div><div class="cr"><div class="t">${link(t.title,t.url)}${t.manual?' <span class="badge">手工</span>':""}</div><div class="meta"><span>${esc(t.track)}</span>${t.tonality?`<span class="tag-amber">调性${t.tonality}</span>`:""}${t.author?`<span>${esc(t.author)}</span>`:""}${t.read?`<span>👁 ${esc(t.read)}</span>`:""}</div></div></div>`).join("")}${l.length>tl?`<button class="more-btn" onclick="tl+=40;render()">加载更多 (${l.length-tl})</button>`:""}`}
+
+/* ===== 素材 ===== */
 let mk="全部",ml=40;
-function rm(){let l=(D.materials||[]).filter(m=>mk==="全部"||(m.source||m.category||"")===mk);const ts=["全部",...new Set((D.materials||[]).map(m=>m.source||m.category||"未分类"))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===mk?"active":""}" onclick="mk='${t}';ml=40;render()">${t}</span>`).join("")}</div>${l.slice(0,ml).map(m=>`<div class="card"><div class="cl" style="background:#7b93c4"></div><div class="cr"><div class="t">${link(m.title,m.url)}</div><div class="meta"><span class="badge">${esc(m.source||m.category||"")}</span>${m.author?`<span>${esc(m.author)}</span>`:''}${m.read?`<span>👁 ${esc(m.read)}</span>`:''}</div></div></div>`).join("")}${l.length>ml?`<button class="more-btn" onclick="ml+=40;render()">加载更多 (${l.length-ml})</button>`:''}`}
-function ri(){const list=(D.inspirations||[]).slice().reverse();return`<div class="entry"><textarea id="insp-text" rows="2" placeholder="记一条灵感：今天看到..."></textarea><div style="margin-top:10px"><button class="btn" onclick="addInsp()">保存灵感</button></div></div>${list.map(i=>`<div class="card"><div class="cl" style="background:#c4a07b"></div><div class="cr"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?`<span>${esc(i.source)}</span>`:''}</div></div></div>`).join("")||'<div class="empty">暂无灵感</div>'}`}
-async function addInsp(){const txt=Q("insp-text").value.trim();if(!txt)return;if(!D.inspirations)D.inspirations=[];D.inspirations.push({text:txt,source:"手机",created:new Date().toISOString().slice(0,10)});D.stats=D.stats||{};D.stats.inspirations=D.inspirations.length;Q("insp-text").value="";render();try{await saveData()}catch(e){}}
-function rh(){return`<div class="stats"><div class="stat"><div class="num">${(D.hotspots||[]).length}</div><div class="lbl">热点</div></div></div>${(D.hotspots||[]).map(h=>`<div class="card"><div class="cl" style="background:#c45b5b"></div><div class="cr"><div class="t">${link(h.title,h.url)}</div><div class="meta"><span>${esc(h.track)}</span><span>📡 ${esc(h.platform||"")}</span>${h.tonality?`<span class="tag-amber">调性${h.tonality}</span>`:''}</div></div></div>`).join("")||'<div class="empty">暂无热点</div>'}`}
-function rs(){return`<div class="skill-grid">${(D.skills||[]).map(s=>`<div class="skill-card"><h4>${esc(s.name)}</h4>${s.note?`<div class="note">${esc(s.note)}</div>`:""}<p>${esc(s.desc||"")}</p></div>`).join("")||'<div class="empty">暂无 Skill</div>'}</div>`}
-function ra(){return(D.articles||[]).map(a=>`<div class="card"><div class="cl" style="background:#7bc49b"></div><div class="cr"><div class="t">${esc(a.name)}</div><div class="meta"><span>${esc(a.cat||"")}</span><span>${esc(a.date||"")}</span></div></div></div>`).join("")||'<div class="empty">暂无成品</div>'}
-function rp(){return(D.publish||[]).map(p=>`<div class="card"><div class="cl" style="background:#5f6b7a"></div><div class="cr"><div class="t">${esc(p.title)}</div><div class="meta"><span>${esc(p.platform||"")}</span><span>${esc(p.date||"")}</span>${p.data?`<span>${esc(p.data)}</span>`:''}</div></div></div>`).join("")||'<div class="empty">暂无发布记录</div>'}
+function rm(){let l=(D.materials||[]).filter(m=>mk==="全部"||(m.source||m.category||"")===mk);const ts=["全部",...new Set((D.materials||[]).map(m=>m.source||m.category||"未分类"))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===mk?"active":""}" onclick="mk='${t}';ml=40;render()">${t}</span>`).join("")}</div>${l.slice(0,ml).map(m=>`<div class="card"><div class="cl" style="background:#7b93c4"></div><div class="cr"><div class="t">${link(m.title,m.url)}</div><div class="meta"><span class="badge">${esc(m.source||m.category||"")}</span>${m.author?`<span>${esc(m.author)}</span>`:""}${m.read?`<span>👁 ${esc(m.read)}</span>`:""}</div></div></div>`).join("")}${l.length>ml?`<button class="more-btn" onclick="ml+=40;render()">加载更多 (${l.length-ml})</button>`:""}`}
+
+/* ===== 灵感 ===== */
+function ri(){const list=(D.inspirations||[]).slice().reverse();return`<div class="entry"><textarea id="insp-text" rows="2" placeholder="记一条灵感：今天看到…"></textarea><div style="margin-top:10px"><button class="btn" onclick="addInsp()">保存灵感</button></div></div>${list.map(i=>`<div class="card"><div class="cl" style="background:#c4a07b"></div><div class="cr"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?`<span>${esc(i.source)}</span>`:""}</div></div></div>`).join("")||'<div class="empty">暂无灵感</div>'}`}
+async function addInsp(){const txt=Q("insp-text").value.trim();if(!txt)return;if(!D.inspirations)D.inspirations=[];D.inspirations.push({text:txt,source:"网页",created:new Date().toISOString().slice(0,10)});D.stats=D.stats||{};D.stats.inspirations=D.inspirations.length;Q("insp-text").value="";render();try{await saveData()}catch(e){}}
+
+/* ===== 热点 ===== */
+function rh(){return`<div class="kpis" style="grid-template-columns:repeat(3,1fr)"><div class="kpi"><div class="kn">${(D.hotspots||[]).length}</div><div class="kl">当前热点数</div></div></div>${(D.hotspots||[]).map(h=>`<div class="card"><div class="cl" style="background:#c45b5b"></div><div class="cr"><div class="t">${link(h.title,h.url)}</div><div class="meta"><span>${esc(h.track)}</span><span>📡 ${esc(h.platform||"")}</span>${h.tonality?`<span class="tag-amber">调性${h.tonality}</span>`:""}</div></div></div>`).join("")||'<div class="empty">暂无热点</div>'}`}
+
+/* ===== Skill ===== */
+function rs(){const q=(document.getElementById("search")?.value||"").trim().toLowerCase();const list=(D.skills||[]).filter(s=>!q||(s.name+(s.note||"")+(s.desc||"")).toLowerCase().includes(q));return`<div class="skill-grid">${list.map(s=>`<div class="skill-card"><h4>${esc(s.name)}</h4>${s.note?`<div class="note">🎯 ${esc(s.note)}</div>`:""}<p>${esc(s.desc||"")}</p></div>`).join("")||'<div class="empty">无匹配 Skill</div>'}</div>`}
+
+/* ===== 成品 ===== */
+function ra(){return(D.articles||[]).map(a=>`<div class="card"><div class="cl" style="background:#0ea5e9"></div><div class="cr"><div class="t">${esc(a.name)}</div><div class="meta"><span>${esc(a.cat||"")}</span><span>${esc(a.date||"")}</span></div></div></div>`).join("")||'<div class="empty">暂无成品</div>'}
+
+/* ===== 发布 ===== */
+function rp(){return(D.publish||[]).map(p=>`<div class="card"><div class="cl" style="background:#22c55e"></div><div class="cr"><div class="t">${esc(p.title)}</div><div class="meta"><span>${esc(p.platform||"")}</span><span>${esc(p.date||"")}</span>${p.data?`<span>${esc(p.data)}</span>`:""}</div></div></div>`).join("")||'<div class="empty">暂无发布记录</div>'}
 </script>
 </body>
 </html>
