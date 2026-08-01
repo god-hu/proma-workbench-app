@@ -2,267 +2,246 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="自媒体工作台">
-<meta name="theme-color" content="#f5f3ef">
-<link rel="icon" type="image/png" href="icon.png">
+<meta name="theme-color" content="#faf8f5">
+<link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <title>自媒体工作台</title>
 <style>
-:root{--bg:#f5f3ef;--panel:#faf9f6;--card:#fff;--border:#ebe7e0;--ink:#2e2b27;--sub:#8d877d;--accent:#5f6b7a;--accent-soft:#eef1f4;--done-bg:#e9f0ea;--done-ink:#5a7d63;--doing-bg:#f4ece0;--doing-ink:#b08342}
+:root{
+  --bg:#faf8f5;--card:#fff;--border:#ede8e2;
+  --ink:#2c2826;--sub:#9e9892;--muted:#c4beb8;
+  --accent:#c4875d;--accent-soft:#f8f1ea;--accent-bg:linear-gradient(135deg,#c4875d,#b0704a);
+  --green:#7d9f7a;--green-bg:#eef3ed;
+  --amber:#d4a24e;--amber-bg:#faf4ea;
+  --red:#c46b6b;--red-bg:#f8eded;
+  --radius:16px;--shadow:0 1px 3px rgba(44,40,38,.04),0 4px 12px rgba(44,40,38,.04);
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6}
-/* 密码锁 */
-#lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:100}
-.lock-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:34px 30px;width:min(340px,88vw);box-shadow:0 8px 30px rgba(0,0,0,.08);text-align:center}
-.lock-title{font-size:19px;font-weight:700;margin-bottom:4px}
-.lock-sub{color:var(--sub);font-size:12px;margin-bottom:20px}
-#pwd{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font-size:15px;outline:none;background:var(--bg);text-align:center}
-#pwd:focus{border-color:var(--accent)}
-.lock-btn{width:100%;margin-top:12px;padding:12px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:15px;cursor:pointer}
-.lock-err{color:#c46;font-size:12px;margin-top:10px;min-height:16px}
-/* 顶部导航 */
-.nav{display:flex;position:sticky;top:0;z-index:50;background:var(--panel);border-bottom:1px solid var(--border);overflow-x:auto;gap:2px;padding:6px 8px}
-.tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 10px;border-radius:10px;cursor:pointer;color:var(--sub);font-size:10.5px;min-width:44px;white-space:nowrap}
-.tab .mi{font-size:16px}
-.tab.active{color:var(--accent);font-weight:600;background:var(--accent-soft)}
-.main{padding:16px 16px 90px;max-width:1100px;margin:0 auto}
-.topbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.topbar h1{font-size:18px;font-weight:700;flex:1}
-.topbar .sync{font-size:11px;color:var(--sub)}
-/* 卡片 */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px;text-align:center}
-.stat .num{font-size:22px;font-weight:700}
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ═══ 密码锁 ═══ */
+#lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:200}
+.lock-wrap{text-align:center;width:min(320px,86vw)}
+.lock-emoji{font-size:42px;margin-bottom:12px}
+.lock-title{font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
+.lock-sub{color:var(--sub);font-size:12px;margin-bottom:24px}
+#pwd{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:14px;font-size:15px;outline:none;background:var(--card);text-align:center;transition:border .2s}
+#pwd:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.lock-btn{width:100%;margin-top:12px;padding:12px;border:none;border-radius:14px;background:var(--accent-bg);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s}
+.lock-btn:active{opacity:.85}
+.lock-err{color:var(--red);font-size:12px;margin-top:8px;min-height:14px}
+
+/* ═══ 抽屉菜单 ═══ */
+.menu-btn{width:36px;height:36px;border:none;border-radius:10px;background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--ink);box-shadow:var(--shadow)}
+.menu-btn:active{background:var(--accent-soft)}
+.backdrop{position:fixed;inset:0;z-index:90;background:rgba(44,40,38,.3);opacity:0;pointer-events:none;transition:opacity .25s}
+.backdrop.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:270px;z-index:95;background:var(--card);transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:24px 16px}
+.drawer.open{transform:translateX(0);box-shadow:8px 0 40px rgba(44,40,38,.1)}
+.drawer h3{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;padding:6px 10px;margin:6px 0 4px}
+.drawer-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;cursor:pointer;font-size:14px;color:var(--ink);transition:background .15s;margin-bottom:1px}
+.drawer-item:hover,.drawer-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.drawer-item .di{font-size:18px;width:24px;text-align:center}
+.drawer-foot{font-size:11px;color:var(--muted);text-align:center;padding:16px 10px}
+
+/* ═══ 顶部 ═══ */
+.header{display:flex;align-items:center;gap:12px;padding:12px 16px;position:sticky;top:0;z-index:40;background:var(--bg)}
+.header h1{font-size:17px;font-weight:700;letter-spacing:-.2px;flex:1}
+
+/* ═══ 主区域 ═══ */
+.main{padding:0 16px 130px;max-width:900px;margin:0 auto}
+
+/* ═══ 统计卡 ═══ */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--card);border-radius:var(--radius);padding:14px 12px;text-align:center;box-shadow:var(--shadow)}
+.stat .num{font-size:24px;font-weight:700;letter-spacing:-.5px}
 .stat .lbl{font-size:11px;color:var(--sub);margin-top:2px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.chip{padding:5px 12px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--sub)}
+
+/* ═══ 筛选 chips ═══ */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.chip{padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:12px;cursor:pointer;color:var(--sub);transition:all .15s}
+.chip:hover{color:var(--ink);border-color:var(--muted)}
 .chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+
+/* ═══ 卡片 ═══ */
+.card{background:var(--card);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);transition:box-shadow .15s}
+.card:active{box-shadow:0 2px 6px rgba(44,40,38,.06)}
 .card .t{font-size:14px;font-weight:600;line-height:1.5}
-.card .meta{color:var(--sub);font-size:12px;margin-top:5px;display:flex;flex-wrap:wrap;gap:6px 12px}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
-.empty{color:var(--sub);padding:20px;text-align:center;background:var(--card);border:1px dashed var(--border);border-radius:14px}
-/* 录入 */
-.entry{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}
-.entry textarea,.entry input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;outline:none;margin-bottom:8px;background:var(--bg)}
-.btn{padding:9px 18px;border-radius:10px;border:none;cursor:pointer;font-size:13px;background:var(--accent);color:#fff}
-.btn.ghost{background:var(--accent-soft);color:var(--accent)}
-.more-btn{display:block;margin:10px auto;padding:7px 18px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--accent);cursor:pointer;font-size:12px}
-.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-.skill-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px}
-.skill-card h4{font-size:13px;margin-bottom:5px}
-.skill-card p{font-size:11.5px;color:var(--sub)}
-.skill-card .note{background:var(--accent-soft);border-radius:8px;padding:6px 8px;margin-bottom:6px;font-size:11.5px}
-@media(max-width:820px){.stats{grid-template-columns:repeat(3,1fr)}}
+.card .meta{color:var(--sub);font-size:12px;margin-top:6px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:8px;font-size:11px;font-weight:600}
+.badge-track{background:var(--accent-soft);color:var(--accent)}
+.pill-high{background:var(--red-bg);color:var(--red)}
+.pill-med{background:var(--amber-bg);color:var(--amber)}
+.pill-done{background:var(--green-bg);color:var(--green)}
+.empty{color:var(--sub);padding:30px 20px;text-align:center;background:var(--card);border:1.5px dashed var(--border);border-radius:var(--radius)}
+
+/* ═══ 录入表单 ═══ */
+.entry{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
+.entry textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-family:inherit;outline:none;background:var(--bg);resize:none;transition:border .2s}
+.entry textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:12px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:var(--accent-bg);color:#fff;transition:opacity .2s}
+.btn:active{opacity:.85}
+.btn-ghost{background:var(--accent-soft);color:var(--accent)}
+.more-btn{display:block;margin:10px auto;padding:8px 20px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--accent);cursor:pointer;font-size:12px;font-weight:600}
+
+/* ═══ Skill 网格 ═══ */
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.skill-card{background:var(--card);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.skill-card h4{font-size:13px;margin-bottom:5px;font-weight:600}
+.skill-card p{font-size:11.5px;color:var(--sub);line-height:1.6}
+.skill-card .note{background:var(--accent-soft);border-radius:10px;padding:7px 10px;margin-bottom:7px;font-size:11.5px;color:var(--accent)}
+
+/* ═══ 底部快捷栏 ═══ */
+.bottombar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:50;display:flex;gap:12px;background:var(--card);border:1.5px solid var(--border);border-radius:24px;padding:8px 16px;box-shadow:0 4px 24px rgba(44,40,38,.1)}
+.bottombar .bbtn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 16px;border-radius:16px;cursor:pointer;border:none;background:transparent;color:var(--sub);font-size:10.5px;font-weight:600;transition:all .15s}
+.bottombar .bbtn .bi{font-size:22px;line-height:1}
+.bottombar .bbtn:active,.bottombar .bbtn:focus{background:var(--accent-soft);color:var(--accent)}
+
+/* ═══ 移动端 ═══ */
+@media(max-width:600px){
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .skill-grid{grid-template-columns:1fr}
+  .header{padding:12px 10px}
+  .main{padding:0 10px 130px}
+  .bottombar{bottom:12px;gap:8px;padding:6px 12px;border-radius:22px}
+  .bottombar .bbtn{padding:6px 14px}
+  .bottombar .bbtn .bi{font-size:20px}
+}
 </style>
 </head>
 <body>
 <div id="lock">
-  <div class="lock-box">
+  <div class="lock-wrap">
+    <div class="lock-emoji">🏠</div>
     <div class="lock-title">自媒体工作台</div>
-    <div class="lock-sub">输入密码查看</div>
-    <input id="pwd" type="password" placeholder="密码" autocomplete="off" />
+    <div class="lock-sub">输入密码查看内容</div>
+    <input id="pwd" type="password" placeholder="密码" autocomplete="off">
     <button class="lock-btn" onclick="unlock()">解锁</button>
-    <div id="lockErr" class="lock-err"></div>
+    <div class="lock-err" id="lockErr"></div>
   </div>
 </div>
 
+<div class="backdrop" id="backdrop" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer"></div>
+
 <div id="app" style="display:none">
-  <div class="nav" id="nav"></div>
-  <div class="main">
-    <div class="topbar">
-      <h1 id="view-title">概览</h1>
-      <span class="sync" id="sync-state"></span>
-    </div>
-    <div id="content"></div>
+  <div class="header">
+    <button class="menu-btn" onclick="openDrawer()">☰</button>
+    <h1 id="view-title">概览</h1>
+  </div>
+  <div class="main" id="content"></div>
+  <div class="bottombar">
+    <button class="bbtn" onclick="showView('inspirations');document.getElementById('insp-text')?.focus()"><span class="bi">💡</span>灵感</button>
+    <button class="bbtn" onclick="showView('hotspots')"><span class="bi">🔥</span>热点</button>
+    <button class="bbtn" onclick="showView('topics')"><span class="bi">🎯</span>选题</button>
   </div>
 </div>
 
 <script>
-/* ===== 常量（部署时替换） ===== */
-const REPO = "god-hu/proma-workbench-app";
-const DATA_PATH = "data.json";
-const DATA_API = "https://api.github.com/repos/" + REPO + "/contents/" + DATA_PATH;
-const ENC_TOKEN = "XDEZrFCTwhz8SpU1MNoEmJlvHV+qxR2IFOTTPpKpp7rH78YHs3I5PLVtwkhZZhL/6RtHPOR2KfrbdSDvqVZcWhx7SQY=";
-const ENC_SALT = "S8TM8m13KfPKTWuFiDdTkw==";
+/* ═══ 加密常量 ═══ */
+const REPO="god-hu/proma-workbench-app";
+const DATA_API="https://api.github.com/repos/"+REPO+"/contents/data.json";
+const ENC_TOKEN="POlVZ5RRIDxFtTZ123MWMjXbOr39+eCt2XM/cILaInbzO/j39QvETORaWkbYAJqEnEKprnnUcruDJ2zFOAzqfT8Im58=";
+const ENC_SALT="y7xJsyAOMXxQvUcoum7w+g==";
+let PWD=null,GH_TOKEN="",D=null;
 
-let PWD = null, GH_TOKEN = "", D = null;
-
-/* ===== 加密工具（与 Python 端兼容） ===== */
-function stripB64(s){ return (s||"").replace(/\s+/g,""); }
-async function deriveKey(pwd, saltB64){
-  const salt = Uint8Array.from(atob(saltB64), c=>c.charCodeAt(0));
-  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pwd), "PBKDF2", false, ["deriveKey"]);
-  return crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:100000, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+/* ═══ AES 工具 ═══ */
+function stripB64(s){return(s||"").replace(/\s+/g,"")}
+async function deriveKey(pwd,saltB64){
+  const salt=Uint8Array.from(atob(saltB64),c=>c.charCodeAt(0));
+  const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(pwd),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:1e5,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
 }
-async function aesDecrypt(blobB64, saltB64, pwd){
-  const key = await deriveKey(pwd, saltB64);
-  const buf = Uint8Array.from(atob(stripB64(blobB64)), c=>c.charCodeAt(0));
-  const iv = buf.slice(0,12), ct = buf.slice(12);
-  const pt = await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, ct);
+async function aesD(blobB64,saltB64,pwd){
+  const key=await deriveKey(pwd,saltB64);
+  const buf=Uint8Array.from(atob(stripB64(blobB64)),c=>c.charCodeAt(0));
+  const iv=buf.slice(0,12),ct=buf.slice(12);
+  const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv},key,ct);
   return new TextDecoder().decode(pt);
 }
-async function aesEncrypt(str, pwd, saltB64){
-  const key = await deriveKey(pwd, saltB64);
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const ctBuf = await crypto.subtle.encrypt({name:"AES-GCM", iv}, key, new TextEncoder().encode(str));
-  const ct = new Uint8Array(ctBuf);
-  const combined = new Uint8Array(12 + ct.length);
-  combined.set(iv, 0); combined.set(ct, 12);
-  return btoa(String.fromCharCode.apply(null, combined));
+async function aesE(str,pwd,saltB64){
+  const key=await deriveKey(pwd,saltB64);
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ctBuf=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(str));
+  const ct=new Uint8Array(ctBuf),combined=new Uint8Array(12+ct.length);
+  combined.set(iv,0);combined.set(ct,12);
+  return btoa(String.fromCharCode.apply(null,combined));
 }
 
-/* ===== 解锁 ===== */
+/* ═══ 解锁 ═══ */
 async function unlock(){
-  const pwd = document.getElementById("pwd").value;
-  if(!pwd) return;
+  const pwd=document.getElementById("pwd").value;
+  if(!pwd)return;
   try{
-    GH_TOKEN = await aesDecrypt(ENC_TOKEN, ENC_SALT, pwd);
-    PWD = pwd;
-    document.getElementById("lock").style.display = "none";
-    document.getElementById("app").style.display = "block";
+    GH_TOKEN=await aesD(ENC_TOKEN,ENC_SALT,pwd);
+    PWD=pwd;
+    document.getElementById("lock").style.display="none";
+    document.getElementById("app").style.display="block";
     await loadData();
-    renderNav();
-    showView("overview");
-    document.getElementById("sync-state").textContent = "已连接 GitHub";
-  }catch(e){
-    document.getElementById("lockErr").textContent = "密码错误";
-  }
+    renderDrawer();showView("overview");
+  }catch(e){document.getElementById("lockErr").textContent="密码错误"}
 }
-document.getElementById("pwd").addEventListener("keydown", e=>{ if(e.key==="Enter") unlock(); });
+document.getElementById("pwd").addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
 
-/* ===== 从 GitHub 拉取加密数据并解密 ===== */
+/* ═══ 抽屉菜单 ═══ */
+const MENU=[["overview","📊","概览"],["topics","🎯","选题"],["materials","📚","素材"],["inspirations","💡","灵感"],["hotspots","🔥","热点"],["skills","🧩","Skill"],["articles","📝","成品"],["publish","🚀","发布"]];
+let view="overview";
+function renderDrawer(){
+  document.getElementById("drawer").innerHTML=(()=>{
+    let h='<h3>内容资产</h3>';
+    MENU.forEach(m=>{h+=`<div class="drawer-item ${m[0]===view?'active':''}" onclick="showView('${m[0]}')"><span class="di">${m[1]}</span>${m[2]}</div>`});
+    h+='<div class="drawer-foot">自媒体工作台 · 加密版</div>';
+    return h;
+  })();
+}
+function openDrawer(){document.getElementById("drawer").classList.add("open");document.getElementById("backdrop").classList.add("open")}
+function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("backdrop").classList.remove("open")}
+const TITLES={overview:"概览",topics:"选题库",materials:"素材库",inspirations:"灵感记录",hotspots:"热点雷达",skills:"Skill 中心",articles:"成品文章",publish:"发布记录"};
+function showView(v){view=v;document.getElementById("view-title").textContent=TITLES[v]||v;closeDrawer();renderDrawer();render();scrollTo({top:0})}
+
+/* ═══ 数据 ═══ */
 async function loadData(){
   try{
-    const r = await fetch(DATA_API, {headers:{Authorization:"Bearer "+GH_TOKEN, Accept:"application/vnd.github+json"}});
-    if(!r.ok) throw new Error("fetch fail " + r.status);
-    const meta = await r.json();
-    if(meta && meta.content){
-      const enc = JSON.parse(atob(stripB64(meta.content)));
-      const plain = await aesDecrypt(enc.ct, enc.iv, PWD);
-      D = JSON.parse(plain);
-    }else{
-      D = {topics:[],materials:[],articles:[],inspirations:[],hotspots:[],skills:[],publish:[],stats:{},generated_at:""};
-    }
-    renderAll();
-  }catch(e){
-    document.getElementById("sync-state").textContent = "数据加载失败";
-  }
+    const r=await fetch(DATA_API,{headers:{Authorization:"Bearer "+GH_TOKEN,Accept:"application/vnd.github+json"}});
+    if(!r.ok)return;
+    const meta=await r.json();
+    if(meta&&meta.content){D=JSON.parse(await aesD(JSON.parse(atob(stripB64(meta.content))).ct,JSON.parse(atob(stripB64(meta.content))).iv,PWD))}
+    else D={topics:[],materials:[],articles:[],inspirations:[],hotspots:[],skills:[],publish:[],stats:{}};
+    render();
+  }catch(e){}
 }
-
-/* ===== 保存数据回 GitHub（加密后 PUT） ===== */
 async function saveData(){
-  const saltB64 = D.__salt || (D.__salt = btoa(String.fromCharCode.apply(null, crypto.getRandomValues(new Uint8Array(16)))));
-  const ct = await aesEncrypt(JSON.stringify(D), PWD, saltB64);
-  const enc = {iv: saltB64, ct};
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(enc))));
-  const body = {message:"update data", content: content};
-  const cur = await fetch(DATA_API, {headers:{Authorization:"Bearer "+GH_TOKEN, Accept:"application/vnd.github+json"}});
-  if(cur.ok){ const m = await cur.json(); if(m.sha) body.sha = m.sha; }
-  const put = await fetch(DATA_API, {method:"PUT", headers:{Authorization:"Bearer "+GH_TOKEN, "Content-Type":"application/json", Accept:"application/vnd.github+json"}, body: JSON.stringify(body)});
-  if(!put.ok) throw new Error("save fail " + put.status);
+  const saltB64=D.__salt||(D.__salt=btoa(String.fromCharCode.apply(null,crypto.getRandomValues(new Uint8Array(16)))));
+  const ct=await aesE(JSON.stringify(D),PWD,saltB64);
+  const enc=JSON.stringify({iv:saltB64,ct});
+  const content=btoa(unescape(encodeURIComponent(enc)));
+  const cur=await fetch(DATA_API,{headers:{Authorization:"Bearer "+GH_TOKEN,Accept:"application/vnd.github+json"}});
+  let sha=null;if(cur.ok){const m=await cur.json();sha=m.sha}
+  const body={message:"update",content};if(sha)body.sha=sha;
+  await fetch(DATA_API,{method:"PUT",headers:{Authorization:"Bearer "+GH_TOKEN,"Content-Type":"application/json",Accept:"application/vnd.github+json"},body:JSON.stringify(body)});
 }
 
-/* ===== 导航 ===== */
-const NAV = [
-  ["overview","📊","概览"],["topics","🎯","选题"],["materials","📚","素材"],["inspirations","💡","灵感"],
-  ["hotspots","🔥","热点"],["skills","🧩","Skill"],["articles","📝","成品"],["publish","🚀","发布"]
-];
-let view = "overview";
-function renderNav(){
-  document.getElementById("nav").innerHTML = NAV.map(n=>`<div class="tab ${n[0]===view?'active':''}" onclick="showView('${n[0]}')"><span class="mi">${n[1]}</span>${n[2]}</div>`).join("");
-}
-const TITLES = {overview:"概览",topics:"选题库",materials:"素材库",inspirations:"灵感记录",hotspots:"热点雷达",skills:"Skill 中心",articles:"成品文章",publish:"发布记录"};
-function showView(v){
-  view = v;
-  document.getElementById("view-title").textContent = TITLES[v] || v;
-  renderNav();
-  renderAll();
-  window.scrollTo({top:0});
-}
-
-/* ===== 渲染 ===== */
-const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-const trackBadge = t => `<span class="badge" style="background:#eef1f4;color:#5f6b7a">${esc(t)}</span>`;
-
-function renderAll(){
-  const c = document.getElementById("content");
-  if(view==="overview"){ c.innerHTML = renderOverview(); return; }
-  if(view==="topics"){ c.innerHTML = renderTopics(); return; }
-  if(view==="materials"){ c.innerHTML = renderMaterials(); return; }
-  if(view==="inspirations"){ c.innerHTML = renderInspirations(); return; }
-  if(view==="hotspots"){ c.innerHTML = renderHotspots(); return; }
-  if(view==="skills"){ c.innerHTML = renderSkills(); return; }
-  if(view==="articles"){ c.innerHTML = renderArticles(); return; }
-  if(view==="publish"){ c.innerHTML = renderPublish(); return; }
-}
-function renderOverview(){
-  const s = D.stats || {};
-  return `<div class="stats">
-    <div class="stat"><div class="num">${s.topics||0}</div><div class="lbl">选题</div></div>
-    <div class="stat"><div class="num">${s.materials||0}</div><div class="lbl">素材</div></div>
-    <div class="stat"><div class="num">${s.inspirations||0}</div><div class="lbl">灵感</div></div>
-    <div class="stat"><div class="num">${s.articles||0}</div><div class="lbl">成品</div></div>
-    <div class="stat"><div class="num">${s.hotspots||0}</div><div class="lbl">热点</div></div>
-    <div class="stat"><div class="num">${s.skills||0}</div><div class="lbl">Skill</div></div>
-  </div>
-  <div class="card"><div class="t">最近灵感</div>${(D.inspirations||[]).slice(-3).reverse().map(i=>`<div class="meta">💡 ${esc(i.text)}</div>`).join("")||'<div class="empty">暂无</div>'}</div>
-  <div class="card"><div class="t">最近热点</div>${(D.hotspots||[]).slice(0,3).map(h=>`<div class="meta">🔥 ${esc(h.title)}</div>`).join("")||'<div class="empty">暂无</div>'}</div>`;
-}
-let topTrack="全部", topLimit=20;
-function renderTopics(){
-  let list = (D.topics||[]).filter(t=>topTrack==="全部"||t.track===topTrack);
-  const tracks = ["全部", ...new Set((D.topics||[]).map(t=>t.track))];
-  return `<div class="chips">${tracks.map(t=>`<span class="chip ${t===topTrack?"active":""}" onclick="topTrack='${t}';topLimit=20;renderAll()">${t}</span>`).join("")}</div>
-  ${list.slice(0,topLimit).map(t=>`<div class="card"><div class="t">${esc(t.title)} ${t.manual?'<span class="badge" style="background:#eef1f4;color:#5f6b7a">手工</span>':''}</div><div class="meta">${trackBadge(t.track)} ${t.tonality?`<span>调性${t.tonality}</span>`:""}</div></div>`).join("")}
-  ${list.length>topLimit?`<button class="more-btn" onclick="topLimit+=20;renderAll()">加载更多(${list.length-topLimit})</button>`:""}`;
-}
-let matTrack="全部", matLimit=20;
-function renderMaterials(){
-  let list = (D.materials||[]).filter(m=>matTrack==="全部"||(m.source||m.category||"")===matTrack);
-  const tracks = ["全部", ...new Set((D.materials||[]).map(m=>m.source||m.category||"未分类"))];
-  return `<div class="chips">${tracks.map(t=>`<span class="chip ${t===matTrack?"active":""}" onclick="matTrack='${t}';matLimit=20;renderAll()">${t===""?"未分类":t}</span>`).join("")}</div>
-  ${list.slice(0,matLimit).map(m=>`<div class="card"><div class="t">${esc(m.title)}</div><div class="meta">${trackBadge(m.source||m.category||"")} ${m.author?`<span>${esc(m.author)}</span>`:""} ${m.read?`<span>${esc(m.read)}</span>`:""}</div></div>`).join("")}
-  ${list.length>matLimit?`<button class="more-btn" onclick="matLimit+=20;renderAll()">加载更多(${list.length-matLimit})</button>`:""}`;
-}
-function renderInspirations(){
-  const list = (D.inspirations||[]).slice().reverse();
-  return `<div class="entry">
-    <textarea id="insp-text" rows="2" placeholder="记一条灵感…"></textarea>
-    <div style="display:flex;gap:8px"><button class="btn" onclick="addInspiration()">保存灵感</button></div>
-  </div>
-  ${list.map(i=>`<div class="card"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?`<span>${esc(i.source)}</span>`:""}</div></div>`).join("")||'<div class="empty">暂无灵感</div>'}`;
-}
-async function addInspiration(){
-  const txt = document.getElementById("insp-text").value.trim();
-  if(!txt) return;
-  if(!D.inspirations) D.inspirations = [];
-  D.inspirations.push({text:txt, source:"手机", created:new Date().toISOString().slice(0,10)});
-  D.stats = D.stats||{}; D.stats.inspirations = D.inspirations.length;
-  document.getElementById("insp-text").value = "";
-  renderAll();
-  document.getElementById("sync-state").textContent = "保存中…";
-  try{ await saveData(); document.getElementById("sync-state").textContent = "✅ 已同步 GitHub"; }
-  catch(e){ document.getElementById("sync-state").textContent = "❌ 保存失败"; }
-}
-function renderHotspots(){
-  const list = (D.hotspots||[]);
-  return `<div class="stats"><div class="stat"><div class="num">${list.length}</div><div class="lbl">热点</div></div></div>
-  ${list.map(h=>`<div class="card"><div class="t">${esc(h.title)}</div><div class="meta">${trackBadge(h.track)} <span>${esc(h.platform||"")}</span></div></div>`).join("")||'<div class="empty">暂无热点</div>'}`;
-}
-function renderSkills(){
-  return `<div class="skill-grid">${(D.skills||[]).map(s=>`<div class="skill-card"><h4>${esc(s.name)}</h4>${s.note?`<div class="note">🎯 ${esc(s.note)}</div>`:""}<p>${esc(s.desc||"")}</p></div>`).join("")||'<div class="empty">暂无 Skill</div>'}</div>`;
-}
-function renderArticles(){
-  return (D.articles||[]).map(a=>`<div class="card"><div class="t">${esc(a.name)}</div><div class="meta">${trackBadge(a.cat||"")} <span>${esc(a.date||"")}</span></div></div>`).join("")||'<div class="empty">暂无成品</div>';
-}
-function renderPublish(){
-  return (D.publish||[]).map(p=>`<div class="card"><div class="t">${esc(p.title)}</div><div class="meta">${trackBadge(p.platform||"")} <span>${esc(p.date||"")}</span>${p.data?`<span>${esc(p.data)}</span>`:""}</div></div>`).join("")||'<div class="empty">暂无发布记录</div>';
-}
+/* ═══ 渲染 ═══ */
+const Q=document.getElementById.bind(document);
+const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const bd=t=>`<span class="badge badge-track">${esc(t)}</span>`;
+function render(){Q("content").innerHTML={overview:rv,topics:rt,materials:rm,inspirations:ri,hotspots:rh,skills:rs,articles:ra,publish:rp}[view]()}
+let tk="全部",tl=20;
+function rv(){const s=D.stats||{};return`<div class="stats">${[["选题",s.topics],["素材",s.materials],["灵感",s.inspirations],["成品",s.articles],["热点",s.hotspots],["Skill",s.skills]].map(x=>`<div class="stat"><div class="num">${x[1]||0}</div><div class="lbl">${x[0]}</div></div>`).join("")}</div><div class="card"><div class="t">📌 最近灵感</div>${(D.inspirations||[]).slice(-3).reverse().map(i=>`<div class="meta">💡 ${esc(i.text)}</div>`).join("")||'<div class="empty">暂无</div>'}</div><div class="card"><div class="t">🔥 最近热点</div>${(D.hotspots||[]).slice(0,3).map(h=>`<div class="meta">🔥 ${esc(h.title)}</div>`).join("")||'<div class="empty">暂无</div>'}</div>`}
+function rt(){let l=(D.topics||[]).filter(t=>tk==="全部"||t.track===tk);const ts=["全部",...new Set((D.topics||[]).map(t=>t.track))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===tk?"active":""}" onclick="tk='${t}';tl=20;render()">${t}</span>`).join("")}</div>${l.slice(0,tl).map(t=>`<div class="card"><div class="t">${esc(t.title)}${t.manual?' <span class="badge badge-track">手工</span>':''}</div><div class="meta">${bd(t.track)}${t.tonality?` <span class="pill-med">调性${t.tonality}</span>`:''}</div></div>`).join("")}${l.length>tl?`<button class="more-btn" onclick="tl+=20;render()">加载更多 (${l.length-tl})</button>`:''}`}
+let mk="全部",ml=20;
+function rm(){let l=(D.materials||[]).filter(m=>mk==="全部"||(m.source||m.category||"")===mk);const ts=["全部",...new Set((D.materials||[]).map(m=>m.source||m.category||"未分类"))];return`<div class="chips">${ts.map(t=>`<span class="chip ${t===mk?"active":""}" onclick="mk='${t}';ml=20;render()">${t}</span>`).join("")}</div>${l.slice(0,ml).map(m=>`<div class="card"><div class="t">${esc(m.title)}</div><div class="meta">${bd(m.source||m.category||"")}${m.author?` <span>${esc(m.author)}</span>`:''}${m.read?` <span>${esc(m.read)}</span>`:''}</div></div>`).join("")}${l.length>ml?`<button class="more-btn" onclick="ml+=20;render()">加载更多 (${l.length-ml})</button>`:''}`}
+function ri(){const list=(D.inspirations||[]).slice().reverse();return`<div class="entry"><textarea id="insp-text" rows="2" placeholder="记一条灵感…"></textarea><div style="margin-top:10px"><button class="btn" onclick="addInsp()">保存灵感</button></div></div>${list.map(i=>`<div class="card"><div class="t">${esc(i.text)}</div><div class="meta"><span>${esc(i.created||"")}</span>${i.source?` <span>${esc(i.source)}</span>`:''}</div></div>`).join("")||'<div class="empty">暂无灵感</div>'}`}
+async function addInsp(){const txt=Q("insp-text").value.trim();if(!txt)return;if(!D.inspirations)D.inspirations=[];D.inspirations.push({text:txt,source:"手机",created:new Date().toISOString().slice(0,10)});D.stats=D.stats||{};D.stats.inspirations=D.inspirations.length;Q("insp-text").value="";render();try{await saveData()}catch(e){}}
+function rh(){return`<div class="stats"><div class="stat"><div class="num">${(D.hotspots||[]).length}</div><div class="lbl">热点</div></div></div>${(D.hotspots||[]).map(h=>`<div class="card"><div class="t">${esc(h.title)}</div><div class="meta">${bd(h.track)}<span>${esc(h.platform||"")}</span></div></div>`).join("")||'<div class="empty">暂无热点</div>'}`}
+function rs(){return`<div class="skill-grid">${(D.skills||[]).map(s=>`<div class="skill-card"><h4>${esc(s.name)}</h4>${s.note?`<div class="note">🎯 ${esc(s.note)}</div>`:""}<p>${esc(s.desc||"")}</p></div>`).join("")||'<div class="empty">暂无 Skill</div>'}</div>`}
+function ra(){return(D.articles||[]).map(a=>`<div class="card"><div class="t">${esc(a.name)}</div><div class="meta">${bd(a.cat||"")}<span>${esc(a.date||"")}</span></div></div>`).join("")||'<div class="empty">暂无成品</div>'}
+function rp(){return(D.publish||[]).map(p=>`<div class="card"><div class="t">${esc(p.title)}</div><div class="meta">${bd(p.platform||"")}<span>${esc(p.date||"")}</span>${p.data?`<span>${esc(p.data)}</span>`:''}</div></div>`).join("")||'<div class="empty">暂无发布记录</div>'}
 </script>
 </body>
 </html>
