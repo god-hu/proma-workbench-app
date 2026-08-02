@@ -103,6 +103,7 @@ a:hover{text-decoration:underline;color:var(--accent-ink)}
 .gcard:hover{transform:translateY(-4px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
 
 .gcard .ghead{display:flex;align-items:center;gap:7px}
+.gcard .gtrack{font-size:11px;color:var(--sub);font-weight:600;opacity:.6}
 .gcard .gdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;opacity:.7}
 .gcard .gtrack{font-size:11px;color:var(--sub);font-weight:600}
 .gcard .gtitle{font-size:14.5px;font-weight:700;line-height:1.5;color:var(--ink);word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -205,6 +206,16 @@ a:hover{text-decoration:underline;color:var(--accent-ink)}
 </div>
 
 <div id="app">
+  <!-- AI 内嵌面板（手机/电脑通用） -->
+  <div id="ai-panel" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)">
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,800px);height:min(80vh,600px);background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fafafa;border-bottom:1px solid #f0f0f0">
+        <div style="font-size:14px;font-weight:600;color:#14161a">🤖 AI 助手（腾讯元宝）</div>
+        <button onclick="toggleAIPanel()" style="width:28px;height:28px;border:none;background:#f0f0f0;border-radius:6px;cursor:pointer;font-size:16px;color:#666">✕</button>
+      </div>
+      <iframe src="https://yuanbao.tencent.com/" style="width:100%;height:calc(100% - 53px);border:none"></iframe>
+    </div>
+  </div>
   <div class="shell">
     <!-- 桌面侧栏 -->
     <aside class="sidebar">
@@ -214,7 +225,7 @@ a:hover{text-decoration:underline;color:var(--accent-ink)}
       </div>
       <div class="nav-group-title">内容资产</div>
       <div id="nav-side"></div>
-      <div class="side-foot" id="side-foot">数据本地加密 · 实时同步</div>
+      <div class="side-foot" id="side-foot" style="margin-bottom:8px"><a href="https://yuanbao.tencent.com/" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--accent-soft);border-radius:8px;color:var(--accent-ink);font-size:12px;font-weight:600;text-decoration:none"><span style="font-size:16px">🤖</span>AI 助手（元宝）</a></div><div class="side-foot" id="side-foot">数据本地加密 · 实时同步</div>
     </aside>
 
     <!-- 主区 -->
@@ -245,7 +256,7 @@ a:hover{text-decoration:underline;color:var(--accent-ink)}
     <button onclick="showView('hotspots')"><span class="bi">🔥</span>热点</button>
     <button onclick="showView('topics')"><span class="bi">🎯</span>选题</button>
     <span class="split"></span>
-    <button onclick="window.open('https://yuanbao.tencent.com/','_blank')"><span class="bi">🤖</span>AI</button>
+    <button onclick="toggleAIPanel()"><span class="bi"></span>AI</button>
   </div>
 </div>
 
@@ -291,6 +302,7 @@ async function saveData(){const sb=D.__salt||(D.__salt=btoa(String.fromCharCode.
 
 const Q=document.getElementById.bind(document);
 function toast(msg){let t=document.getElementById("toast");if(!t){t=document.createElement("div");t.id="toast";t.style.cssText="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#14161a;color:#fff;padding:9px 16px;border-radius:10px;font-size:12.5px;z-index:300;box-shadow:0 6px 24px rgba(0,0,0,.18)";document.body.appendChild(t)}t.textContent=msg;clearTimeout(t._t);t._t=setTimeout(()=>t.remove(),1900)}
+function toggleAIPanel(){const p=document.getElementById("ai-panel");p.style.display=p.style.display==="none"?"block":"none"}
 const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 function link(title,url){if(!url)return esc(title);const t=esc((title||"").length>140?title.slice(0,140)+"…":title);return`<a href="${url.replace(/"/g,"&quot;")}" target="_blank" rel="noopener">${t}</a>`}
 const COLORS={"心理学·深度":"#7b93c4","心理学·情感关系":"#c47b8e","星座·占星":"#9b7bc4","玄学·疗愈":"#c49b7b","人生感悟·文案":"#7bc49b","亲子·教育":"#c4a67b","社会观察·分析":"#9e9e9e","生活智慧·干货":"#7bb4c4","未分类":"#ccc","新赛道·发现":"#b0b0b0"};
