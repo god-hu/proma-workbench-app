@@ -269,12 +269,14 @@ async function dk(pwd,sb){const s=Uint8Array.from(atob(sb),c=>c.charCodeAt(0));c
 async function aesD(bb,sb,pwd){const k=await dk(pwd,sb);const buf=Uint8Array.from(atob(sb64(bb)),c=>c.charCodeAt(0));return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},k,buf.slice(12)))}
 async function aesE(str,pwd,sb){const k=await dk(pwd,sb);const iv=crypto.getRandomValues(new Uint8Array(12));const cb=await crypto.subtle.encrypt({name:"AES-GCM",iv},k,new TextEncoder().encode(str));const ct=new Uint8Array(cb),c=new Uint8Array(12+ct.length);c.set(iv,0);c.set(ct,12);let s='';for(let i=0;i<c.length;i+=8192)s+=String.fromCharCode.apply(null,c.subarray(i,i+8192));return btoa(s)}
 
-async function unlock(){
-  const pwd=document.getElementById("pwd").value;if(!pwd)return;
-  try{GH_TOKEN=await aesD(ENC_TOKEN,ENC_SALT,pwd);PWD=pwd;document.getElementById("lock").style.display="none";document.getElementById("app").style.display="block";await loadData();renderNav();renderDrawerM();showView("overview")}
-  catch(e){document.getElementById("lockErr").textContent="密码错误"}
+async function unlock(pwd){
+  pwd=pwd||document.getElementById("pwd").value;if(!pwd)return;
+  try{GH_TOKEN=await aesD(ENC_TOKEN,ENC_SALT,pwd);PWD=pwd;sessionStorage.setItem("wb_pwd",pwd);document.getElementById("lock").style.display="none";document.getElementById("app").style.display="block";await loadData();renderNav();renderDrawerM();showView("overview")}
+  catch(e){document.getElementById("lockErr").textContent="密码错误";sessionStorage.removeItem("wb_pwd")}
 }
 document.getElementById("pwd").addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
+// 页面加载时自动解锁
+setTimeout(()=>{const p=sessionStorage.getItem("wb_pwd");if(p)unlock(p)},100);
 // ⌘K / Ctrl+K 聚焦搜索
 document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();document.getElementById("search")?.focus()}});
 
