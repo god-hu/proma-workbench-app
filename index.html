@@ -296,7 +296,6 @@ async function loadData(){
     else D={topics:[],materials:[],articles:[],inspirations:[],hotspots:[],skills:[],publish:[],stats:{}};
     if(D.generated_at) document.getElementById("sync-info").textContent="更新于 "+D.generated_at;
     render();
-    setTimeout(flushPending,800);
   }catch(e){}
 }
 async function saveData(){const sb=D.__salt||(D.__salt=btoa(String.fromCharCode.apply(null,crypto.getRandomValues(new Uint8Array(16)))));const ct=await aesE(JSON.stringify(D),PWD,sb);const enc=JSON.stringify({iv:sb,ct});const content=btoa(unescape(encodeURIComponent(enc)));const cur=await fetch(DATA_API,{headers:{Authorization:"Bearer "+GH_TOKEN,Accept:"application/vnd.github+json"}});let sha=null;if(cur.ok){const m=await cur.json();sha=m.sha}const body={message:"update",content};if(sha)body.sha=sha;await fetch(DATA_API,{method:"PUT",headers:{Authorization:"Bearer "+GH_TOKEN,"Content-Type":"application/json",Accept:"application/vnd.github+json"},body:JSON.stringify(body)})}
@@ -342,13 +341,7 @@ function rm(){let l=(D.materials||[]).filter(m=>mk==="全部"||(m.source||m.cate
 
 /* ===== 灵感 ===== */
 function ri(){const list=(D.inspirations||[]).slice().reverse();return`<div class="entry"><textarea id="insp-text" rows="2" placeholder="记一条灵感：今天看到…"></textarea><select id="insp-source" style="margin-top:8px;width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:9px;font-size:13px;background:var(--bg);outline:none;color:var(--ink)"><option>自己</option><option>阅读</option><option>热搜</option><option>评论</option><option>网页</option></select><div style="margin-top:10px"><button class="btn" onclick="addInsp()">保存灵感</button></div></div><div class="card-grid">${list.map(i=>gInsp(i)).join("")||'<div class="empty">暂无灵感</div>'}</div>`}
-// 本地离线缓存：保存失败时先把新增灵感暂存在 localStorage，联网后自动补传
-function pendCache(){try{const p=JSON.parse(localStorage.getItem("wb_pending")||"[]");return Array.isArray(p)?p:[]}catch(e){return[]}}
-function pendAdd(item){try{const p=pendCache();p.push(item);localStorage.setItem("wb_pending",JSON.stringify(p))}catch(e){}}
-function pendClear(){try{localStorage.removeItem("wb_pending")}catch(e){}}
-// 页面加载后：尝试把离线缓存的灵感补传到 GitHub
-async function flushPending(){const p=pendCache();if(!p.length||!PWD||!GH_TOKEN)return;let ok=true;for(const it of p){if(!(D.inspirations||[]).some(x=>x.text===it.text)){D.inspirations.push(it);D.stats=D.stats||{};D.stats.inspirations=D.inspirations.length}}try{await saveData();pendClear();toast("🔄 已补传 "+p.length+" 条离线灵感")}catch(e){ok=false;toast("⚠️ 离线灵感补传失败，将在下次打开时重试")}}
-async function addInsp(){const txt=Q("insp-text").value.trim();if(!txt)return;if(!D.inspirations)D.inspirations=[];if(D.inspirations.some(x=>x.text===txt)){toast("⚠️ 这条已存在");return;}const src=Q("insp-source")?Q("insp-source").value:"网页";const item={text:txt,source:src,created:new Date().toISOString().slice(0,10)};D.inspirations.push(item);D.stats=D.stats||{};D.stats.inspirations=D.inspirations.length;Q("insp-text").value="";render();try{await saveData();toast("✅ 已保存到云端")}catch(e){pendAdd(item);toast("⚠️ 网络不可用，已暂存本地，联网后自动补传")}}
+async function addInsp(){const txt=Q("insp-text").value.trim();if(!txt)return;if(!D.inspirations)D.inspirations=[];if(D.inspirations.some(x=>x.text===txt)){toast("⚠️ 这条已存在");return;}const src=Q("insp-source")?Q("insp-source").value:"网页";D.inspirations.push({text:txt,source:src,created:new Date().toISOString().slice(0,10)});D.stats=D.stats||{};D.stats.inspirations=D.inspirations.length;Q("insp-text").value="";render();toast("✅ 已保存");try{await saveData()}catch(e){}}
 
 /* ===== 热点 ===== */
 function rh(){return`<div class="kpis" style="grid-template-columns:repeat(3,1fr)"><div class="kpi"><div class="kn">${(D.hotspots||[]).length}</div><div class="kl">当前热点数</div></div></div><div class="card-grid">${(D.hotspots||[]).map(h=>gHot(h)).join("")||'<div class="empty">暂无热点</div>'}</div>`}
