@@ -267,7 +267,7 @@ let PWD=null,GH_TOKEN="",D=null;
 function sb64(s){return(s||"").replace(/\s+/g,"")}
 async function dk(pwd,sb){const s=Uint8Array.from(atob(sb),c=>c.charCodeAt(0));const b=await crypto.subtle.importKey("raw",new TextEncoder().encode(pwd),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt:s,iterations:1e5,hash:"SHA-256"},b,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
 async function aesD(bb,sb,pwd){const k=await dk(pwd,sb);const buf=Uint8Array.from(atob(sb64(bb)),c=>c.charCodeAt(0));return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:buf.slice(0,12)},k,buf.slice(12)))}
-async function aesE(str,pwd,sb){const k=await dk(pwd,sb);const iv=crypto.getRandomValues(new Uint8Array(12));const cb=await crypto.subtle.encrypt({name:"AES-GCM",iv},k,new TextEncoder().encode(str));const ct=new Uint8Array(cb),c=new Uint8Array(12+ct.length);c.set(iv,0);c.set(ct,12);return btoa(String.fromCharCode.apply(null,c))}
+async function aesE(str,pwd,sb){const k=await dk(pwd,sb);const iv=crypto.getRandomValues(new Uint8Array(12));const cb=await crypto.subtle.encrypt({name:"AES-GCM",iv},k,new TextEncoder().encode(str));const ct=new Uint8Array(cb),c=new Uint8Array(12+ct.length);c.set(iv,0);c.set(ct,12);let s='';for(let i=0;i<c.length;i+=8192)s+=String.fromCharCode.apply(null,c.subarray(i,i+8192));return btoa(s)}
 
 async function unlock(){
   const pwd=document.getElementById("pwd").value;if(!pwd)return;
